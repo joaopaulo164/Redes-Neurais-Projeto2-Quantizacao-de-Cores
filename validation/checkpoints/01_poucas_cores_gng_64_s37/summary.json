@@ -1,0 +1,37 @@
+{
+  "checkpoint": "01_poucas_cores_gng_64_s37.pt",
+  "model": "gng",
+  "keys": [
+    "model",
+    "weights",
+    "errors",
+    "edges",
+    "history"
+  ],
+  "history_exported": true,
+  "history_records": 100,
+  "weights": {
+    "shape": [
+      64,
+      3
+    ],
+    "dtype": "torch.float32",
+    "numel": 192,
+    "minimum": 0.08351362496614456,
+    "maximum": 0.9850702285766602,
+    "mean": 0.5543861389160156
+  },
+  "errors": {
+    "shape": [
+      64
+    ],
+    "dtype": "torch.float32",
+    "numel": 64,
+    "minimum": 5.268882225861312e-43,
+    "maximum": 0.0031173317693173885,
+    "mean": 0.0006781104602850974
+  },
+  "number_of_nodes": 64,
+  "number_of_edges": 108,
+  "edges_exported": true
+}

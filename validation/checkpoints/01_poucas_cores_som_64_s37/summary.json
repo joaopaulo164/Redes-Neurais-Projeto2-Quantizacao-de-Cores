@@ -1,0 +1,27 @@
+{
+  "checkpoint": "01_poucas_cores_som_64_s37.pt",
+  "model": "som",
+  "keys": [
+    "model",
+    "rows",
+    "cols",
+    "weights",
+    "history"
+  ],
+  "history_exported": true,
+  "history_records": 15,
+  "weights": {
+    "shape": [
+      64,
+      3
+    ],
+    "dtype": "torch.float32",
+    "numel": 192,
+    "minimum": 0.08517881482839584,
+    "maximum": 0.9831388592720032,
+    "mean": 0.5560742616653442
+  },
+  "rows": 8,
+  "cols": 8,
+  "number_of_prototypes": 64
+}

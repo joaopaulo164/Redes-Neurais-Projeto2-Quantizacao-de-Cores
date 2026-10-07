@@ -1,0 +1,23 @@
+{
+  "checkpoint": "03_alta_saturacao_kmeans_16_s137.pt",
+  "model": "kmeans",
+  "keys": [
+    "model",
+    "centroids",
+    "history"
+  ],
+  "history_exported": true,
+  "history_records": 29,
+  "centroids": {
+    "shape": [
+      16,
+      3
+    ],
+    "dtype": "torch.float32",
+    "numel": 48,
+    "minimum": 0.00812621507793665,
+    "maximum": 0.9577030539512634,
+    "mean": 0.41338351368904114
+  },
+  "number_of_centroids": 16
+}

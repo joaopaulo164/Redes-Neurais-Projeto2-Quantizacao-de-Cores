@@ -1,0 +1,27 @@
+{
+  "checkpoint": "05_cena_complexa_som_64_s137.pt",
+  "model": "som",
+  "keys": [
+    "model",
+    "rows",
+    "cols",
+    "weights",
+    "history"
+  ],
+  "history_exported": true,
+  "history_records": 15,
+  "weights": {
+    "shape": [
+      64,
+      3
+    ],
+    "dtype": "torch.float32",
+    "numel": 192,
+    "minimum": 0.05789300054311752,
+    "maximum": 0.9102603197097778,
+    "mean": 0.4287683963775635
+  },
+  "rows": 8,
+  "cols": 8,
+  "number_of_prototypes": 64
+}

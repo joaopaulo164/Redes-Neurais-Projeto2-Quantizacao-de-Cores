@@ -1,0 +1,23 @@
+{
+  "checkpoint": "02_gradiente_suave_kmeans_256_s73.pt",
+  "model": "kmeans",
+  "keys": [
+    "model",
+    "centroids",
+    "history"
+  ],
+  "history_exported": true,
+  "history_records": 61,
+  "centroids": {
+    "shape": [
+      256,
+      3
+    ],
+    "dtype": "torch.float32",
+    "numel": 768,
+    "minimum": 0.0,
+    "maximum": 0.9882233142852783,
+    "mean": 0.5662186145782471
+  },
+  "number_of_centroids": 256
+}

@@ -1,0 +1,37 @@
+{
+  "checkpoint": "05_cena_complexa_gng_16_s13.pt",
+  "model": "gng",
+  "keys": [
+    "model",
+    "weights",
+    "errors",
+    "edges",
+    "history"
+  ],
+  "history_exported": true,
+  "history_records": 100,
+  "weights": {
+    "shape": [
+      16,
+      3
+    ],
+    "dtype": "torch.float32",
+    "numel": 48,
+    "minimum": 0.07523646950721741,
+    "maximum": 0.8697630167007446,
+    "mean": 0.4350142478942871
+  },
+  "errors": {
+    "shape": [
+      16
+    ],
+    "dtype": "torch.float32",
+    "numel": 16,
+    "minimum": 0.054661381989717484,
+    "maximum": 0.27151408791542053,
+    "mean": 0.12199228256940842
+  },
+  "number_of_nodes": 16,
+  "number_of_edges": 32,
+  "edges_exported": true
+}

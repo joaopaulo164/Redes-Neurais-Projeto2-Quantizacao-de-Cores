@@ -1,0 +1,27 @@
+{
+  "checkpoint": "03_alta_saturacao_som_256_s13.pt",
+  "model": "som",
+  "keys": [
+    "model",
+    "rows",
+    "cols",
+    "weights",
+    "history"
+  ],
+  "history_exported": true,
+  "history_records": 15,
+  "weights": {
+    "shape": [
+      256,
+      3
+    ],
+    "dtype": "torch.float32",
+    "numel": 768,
+    "minimum": 0.005847464315593243,
+    "maximum": 0.9866997599601746,
+    "mean": 0.36084750294685364
+  },
+  "rows": 16,
+  "cols": 16,
+  "number_of_prototypes": 256
+}

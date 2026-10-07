@@ -1,0 +1,23 @@
+{
+  "checkpoint": "05_cena_complexa_kmeans_16_s73.pt",
+  "model": "kmeans",
+  "keys": [
+    "model",
+    "centroids",
+    "history"
+  ],
+  "history_exported": true,
+  "history_records": 63,
+  "centroids": {
+    "shape": [
+      16,
+      3
+    ],
+    "dtype": "torch.float32",
+    "numel": 48,
+    "minimum": 0.07106981426477432,
+    "maximum": 0.8828921318054199,
+    "mean": 0.44159677624702454
+  },
+  "number_of_centroids": 16
+}

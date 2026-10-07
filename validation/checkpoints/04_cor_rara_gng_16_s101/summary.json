@@ -1,0 +1,37 @@
+{
+  "checkpoint": "04_cor_rara_gng_16_s101.pt",
+  "model": "gng",
+  "keys": [
+    "model",
+    "weights",
+    "errors",
+    "edges",
+    "history"
+  ],
+  "history_exported": true,
+  "history_records": 100,
+  "weights": {
+    "shape": [
+      16,
+      3
+    ],
+    "dtype": "torch.float32",
+    "numel": 48,
+    "minimum": 0.01042989268898964,
+    "maximum": 0.8881134986877441,
+    "mean": 0.30880844593048096
+  },
+  "errors": {
+    "shape": [
+      16
+    ],
+    "dtype": "torch.float32",
+    "numel": 16,
+    "minimum": 0.008671922609210014,
+    "maximum": 0.050067514181137085,
+    "mean": 0.029514703899621964
+  },
+  "number_of_nodes": 16,
+  "number_of_edges": 25,
+  "edges_exported": true
+}

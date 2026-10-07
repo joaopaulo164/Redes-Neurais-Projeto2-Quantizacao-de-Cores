@@ -1,0 +1,37 @@
+{
+  "checkpoint": "03_alta_saturacao_gng_16_s13.pt",
+  "model": "gng",
+  "keys": [
+    "model",
+    "weights",
+    "errors",
+    "edges",
+    "history"
+  ],
+  "history_exported": true,
+  "history_records": 100,
+  "weights": {
+    "shape": [
+      16,
+      3
+    ],
+    "dtype": "torch.float32",
+    "numel": 48,
+    "minimum": 0.007547013461589813,
+    "maximum": 0.9560540318489075,
+    "mean": 0.4065612554550171
+  },
+  "errors": {
+    "shape": [
+      16
+    ],
+    "dtype": "torch.float32",
+    "numel": 16,
+    "minimum": 0.06263462454080582,
+    "maximum": 0.8324984908103943,
+    "mean": 0.2620176672935486
+  },
+  "number_of_nodes": 16,
+  "number_of_edges": 26,
+  "edges_exported": true
+}

@@ -1,0 +1,27 @@
+{
+  "checkpoint": "00_controle_16_cores_som_256_s37.pt",
+  "model": "som",
+  "keys": [
+    "model",
+    "rows",
+    "cols",
+    "weights",
+    "history"
+  ],
+  "history_exported": true,
+  "history_records": 15,
+  "weights": {
+    "shape": [
+      256,
+      3
+    ],
+    "dtype": "torch.float32",
+    "numel": 768,
+    "minimum": 0.004122472833842039,
+    "maximum": 0.9894591569900513,
+    "mean": 0.4545760452747345
+  },
+  "rows": 16,
+  "cols": 16,
+  "number_of_prototypes": 256
+}

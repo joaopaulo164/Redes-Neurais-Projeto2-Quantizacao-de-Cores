@@ -1,0 +1,37 @@
+{
+  "checkpoint": "00_controle_16_cores_gng_256_s101.pt",
+  "model": "gng",
+  "keys": [
+    "model",
+    "weights",
+    "errors",
+    "edges",
+    "history"
+  ],
+  "history_exported": true,
+  "history_records": 100,
+  "weights": {
+    "shape": [
+      256,
+      3
+    ],
+    "dtype": "torch.float32",
+    "numel": 768,
+    "minimum": 0.004264209419488907,
+    "maximum": 0.9931269288063049,
+    "mean": 0.4859618842601776
+  },
+  "errors": {
+    "shape": [
+      256
+    ],
+    "dtype": "torch.float32",
+    "numel": 256,
+    "minimum": 1.401298464324817e-43,
+    "maximum": 0.0006505316705442965,
+    "mean": 2.3056427380652167e-05
+  },
+  "number_of_nodes": 256,
+  "number_of_edges": 355,
+  "edges_exported": true
+}

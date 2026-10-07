@@ -1,0 +1,308 @@
+# ============================================================
+# Projeto 2 - Redes Neurais
+# Quantização de cores com SOM, GNG e k-means
+# ============================================================
+
+
+# ------------------------------------------------------------
+# Ambientes virtuais Python
+# ------------------------------------------------------------
+
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+
+# ------------------------------------------------------------
+# Cache e arquivos compilados do Python
+# ------------------------------------------------------------
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+.pytest_cache/
+.mypy_cache/
+.pyre_cache/
+.ruff_cache/
+.pytype/
+.hypothesis/
+
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+nosetests.xml
+
+
+# ------------------------------------------------------------
+# Empacotamento e distribuição Python
+# ------------------------------------------------------------
+
+build/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+
+# ------------------------------------------------------------
+# Jupyter Notebook
+# ------------------------------------------------------------
+
+.ipynb_checkpoints/
+
+# Descomente a linha abaixo se os notebooks não forem versionados:
+# notebooks/*.ipynb
+
+
+# ------------------------------------------------------------
+# Visual Studio Code
+# ------------------------------------------------------------
+# Ignora arquivos locais da pasta, mas permite versionar
+# configurações portáveis e úteis à equipe.
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+
+# ------------------------------------------------------------
+# PyCharm e demais IDEs da JetBrains
+# ------------------------------------------------------------
+
+.idea/
+*.iml
+*.ipr
+*.iws
+
+
+# ------------------------------------------------------------
+# Editores de texto
+# ------------------------------------------------------------
+
+*.swp
+*.swo
+*.swn
+*~
+.vim/
+.history/
+
+
+# ------------------------------------------------------------
+# Sistemas operacionais
+# ------------------------------------------------------------
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Linux
+.directory
+.Trash-*
+.nfs*
+
+
+# ------------------------------------------------------------
+# Variáveis de ambiente, credenciais e configurações locais
+# ------------------------------------------------------------
+
+.env
+.env.*
+!.env.example
+
+*.pem
+*.key
+*.crt
+credentials.json
+secrets.json
+
+config/local.yaml
+config/local.yml
+config/private.yaml
+config/private.yml
+
+
+# ------------------------------------------------------------
+# Logs, caches e arquivos temporários
+# ------------------------------------------------------------
+
+*.log
+logs/
+tmp/
+temp/
+.cache/
+
+*.tmp
+*.temp
+*.bak
+*.old
+*.orig
+
+
+# ------------------------------------------------------------
+# Dados de entrada
+# ------------------------------------------------------------
+# As imagens podem ser grandes ou possuir restrições de licença.
+# Os arquivos .gitkeep preservam a estrutura dos diretórios.
+
+data/raw/*
+!data/raw/.gitkeep
+
+data/processed/*
+!data/processed/.gitkeep
+
+data/interim/*
+!data/interim/.gitkeep
+
+data/external/*
+!data/external/.gitkeep
+
+# Permite versionar a documentação dos dados.
+!data/README.md
+
+
+# ------------------------------------------------------------
+# Resultados gerados pelos experimentos
+# ------------------------------------------------------------
+
+outputs/checkpoints/*
+!outputs/checkpoints/.gitkeep
+
+outputs/reconstructed/*
+!outputs/reconstructed/.gitkeep
+
+outputs/figures/*
+!outputs/figures/.gitkeep
+
+outputs/metrics/*
+!outputs/metrics/.gitkeep
+
+outputs/tables/*
+!outputs/tables/.gitkeep
+
+outputs/logs/*
+!outputs/logs/.gitkeep
+
+
+# ------------------------------------------------------------
+# Checkpoints e modelos treinados
+# ------------------------------------------------------------
+
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.pkl
+*.pickle
+*.joblib
+
+
+# ------------------------------------------------------------
+# Resultados tabulares gerados
+# ------------------------------------------------------------
+
+*.parquet
+*.feather
+
+# Arquivos CSV não são ignorados globalmente porque o projeto
+# pode possuir metadados pequenos que devam ser versionados.
+# Os CSVs experimentais já são ignorados dentro de outputs/.
+
+
+# ------------------------------------------------------------
+# Imagens e figuras
+# ------------------------------------------------------------
+# Não ignore globalmente *.png, *.jpg ou *.jpeg, pois as imagens
+# podem fazer parte da documentação e de report/assets/.
+# As saídas experimentais já são ignoradas em outputs/.
+
+
+# ------------------------------------------------------------
+# Relatórios gerados automaticamente
+# ------------------------------------------------------------
+
+report/relatorio_gerado.md
+report/generated/
+
+# Arquivos auxiliares de LaTeX, caso o relatório seja convertido.
+report/*.aux
+report/*.log
+report/*.out
+report/*.toc
+report/*.fls
+report/*.fdb_latexmk
+report/*.synctex.gz
+
+# A pasta report/assets/ não é ignorada: use-a para versionar
+# apenas figuras e evidências finais citadas no relatório.
+
+
+# ------------------------------------------------------------
+# Ferramentas de profiling, monitoramento e desempenho
+# ------------------------------------------------------------
+
+.prof/
+*.prof
+*.lprof
+profile-results/
+
+tensorboard/
+runs/
+
+
+# ------------------------------------------------------------
+# Arquivos de processo e execução interrompida
+# ------------------------------------------------------------
+
+*.pid
+*.pid.lock
+
+
+# ------------------------------------------------------------
+# Arquivos compactados locais
+# ------------------------------------------------------------
+
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.rar

@@ -1,0 +1,27 @@
+{
+  "checkpoint": "04_cor_rara_som_16_s13.pt",
+  "model": "som",
+  "keys": [
+    "model",
+    "rows",
+    "cols",
+    "weights",
+    "history"
+  ],
+  "history_exported": true,
+  "history_records": 15,
+  "weights": {
+    "shape": [
+      16,
+      3
+    ],
+    "dtype": "torch.float32",
+    "numel": 48,
+    "minimum": 0.011966352351009846,
+    "maximum": 0.6781306862831116,
+    "mean": 0.26662677526474
+  },
+  "rows": 4,
+  "cols": 4,
+  "number_of_prototypes": 16
+}

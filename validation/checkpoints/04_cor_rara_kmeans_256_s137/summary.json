@@ -1,0 +1,23 @@
+{
+  "checkpoint": "04_cor_rara_kmeans_256_s137.pt",
+  "model": "kmeans",
+  "keys": [
+    "model",
+    "centroids",
+    "history"
+  ],
+  "history_exported": true,
+  "history_records": 82,
+  "centroids": {
+    "shape": [
+      256,
+      3
+    ],
+    "dtype": "torch.float32",
+    "numel": 768,
+    "minimum": 0.0042291427962481976,
+    "maximum": 0.9975743293762207,
+    "mean": 0.3112795650959015
+  },
+  "number_of_centroids": 256
+}

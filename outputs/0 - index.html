@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador de Pasta de Imagens</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        .controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .galeria {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .container-foto {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        img {
+            max-width: 250px;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 4px;
+            display: block;
+        }
+        span {
+            display: block;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #666;
+            max-width: 250px;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="controls">
+        <h2>Selecione a pasta de imagens do seu PC</h2>
+        <!-- O atributo webkitdirectory permite escolher uma pasta inteira -->
+        <input type="file" id="seletor-pasta" webkitdirectory directory multiple>
+    </div>
+
+    <div class="galeria" id="galeria"></div>
+
+    <script>
+        document.getElementById('seletor-pasta').addEventListener('change', function(event) {
+            const arquivos = event.target.files;
+            const galeria = document.getElementById('galeria');
+            
+            // Limpa a galeria anterior
+            galeria.innerHTML = '';
+
+            // Extensões de imagem permitidas
+            const extensoesValidas = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
+
+            for (let i = 0; i < arquivos.length; i++) {
+                const arquivo = arquivos[i];
+                const extensao = arquivo.name.split('.').pop().toLowerCase();
+
+                // Verifica se o arquivo é uma imagem
+                if (extensoesValidas.includes(extensao)) {
+                    // Cria uma URL temporária para o arquivo local
+                    const urlImagem = URL.createObjectURL(arquivo);
+
+                    // Cria a estrutura na tela
+                    const container = document.createElement('div');
+                    container.className = 'container-foto';
+
+                    const img = document.createElement('img');
+                    img.src = urlImagem;
+
+                    const nome = document.createElement('span');
+                    nome.textContent = arquivo.name;
+
+                    container.appendChild(img);
+                    container.appendChild(nome);
+                    galeria.appendChild(container);
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

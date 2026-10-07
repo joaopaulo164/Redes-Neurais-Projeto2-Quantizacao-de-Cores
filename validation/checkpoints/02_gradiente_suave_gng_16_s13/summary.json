@@ -1,0 +1,37 @@
+{
+  "checkpoint": "02_gradiente_suave_gng_16_s13.pt",
+  "model": "gng",
+  "keys": [
+    "model",
+    "weights",
+    "errors",
+    "edges",
+    "history"
+  ],
+  "history_exported": true,
+  "history_records": 100,
+  "weights": {
+    "shape": [
+      16,
+      3
+    ],
+    "dtype": "torch.float32",
+    "numel": 48,
+    "minimum": 0.004460912197828293,
+    "maximum": 0.9846447706222534,
+    "mean": 0.559330403804779
+  },
+  "errors": {
+    "shape": [
+      16
+    ],
+    "dtype": "torch.float32",
+    "numel": 16,
+    "minimum": 0.025362394750118256,
+    "maximum": 0.09003598988056183,
+    "mean": 0.05111771449446678
+  },
+  "number_of_nodes": 16,
+  "number_of_edges": 20,
+  "edges_exported": true
+}

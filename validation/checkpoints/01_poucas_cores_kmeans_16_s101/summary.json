@@ -1,0 +1,23 @@
+{
+  "checkpoint": "01_poucas_cores_kmeans_16_s101.pt",
+  "model": "kmeans",
+  "keys": [
+    "model",
+    "centroids",
+    "history"
+  ],
+  "history_exported": true,
+  "history_records": 20,
+  "centroids": {
+    "shape": [
+      16,
+      3
+    ],
+    "dtype": "torch.float32",
+    "numel": 48,
+    "minimum": 0.08185290545225143,
+    "maximum": 0.9823275208473206,
+    "mean": 0.573401153087616
+  },
+  "number_of_centroids": 16
+}

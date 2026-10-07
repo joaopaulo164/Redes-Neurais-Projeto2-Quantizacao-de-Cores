@@ -1,0 +1,9 @@
+torch>=2.2
+numpy>=1.26
+pandas>=2.1
+Pillow>=10
+matplotlib>=3.8
+scikit-image>=0.22
+PyYAML>=6
+pytest>=8
+tabulate>=0.9

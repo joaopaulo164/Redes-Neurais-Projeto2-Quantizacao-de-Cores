@@ -1,0 +1,27 @@
+{
+  "checkpoint": "02_gradiente_suave_som_256_s101.pt",
+  "model": "som",
+  "keys": [
+    "model",
+    "rows",
+    "cols",
+    "weights",
+    "history"
+  ],
+  "history_exported": true,
+  "history_records": 15,
+  "weights": {
+    "shape": [
+      256,
+      3
+    ],
+    "dtype": "torch.float32",
+    "numel": 768,
+    "minimum": 0.0016361818416044116,
+    "maximum": 0.9871353507041931,
+    "mean": 0.5559308528900146
+  },
+  "rows": 16,
+  "cols": 16,
+  "number_of_prototypes": 256
+}
