@@ -348,24 +348,24 @@ Tabela resumida de métricas agregadas (média ± std entre sementes):
 
 | image_name               | model   |   capacity_requested |   quantization_error_mean |   topographic_error_mean |   mean_delta_e_mean |   psnr_mean |   training_time_s_mean |   inference_time_s_mean |
 |:-------------------------|:--------|---------------------:|--------------------------:|-------------------------:|--------------------:|------------:|-----------------------:|------------------------:|
-| 00_controle_16_cores.png | gng     |                   16 |                    0.197  |                   0.1    |             12.1823 |     18.1541 |                 0.3302 |                  0.1878 |
-| 00_controle_16_cores.png | kmeans  |                   16 |                    0.0079 |                 nan      |              0.5369 |     42.3464 |                 0.0643 |                  0.0474 |
-| 00_controle_16_cores.png | som     |                   16 |                    0.2153 |                   0.0003 |             14.6067 |     17.0575 |                 0.1358 |                  0.066  |
-| 01_poucas_cores.png      | gng     |                   16 |                    0.0417 |                   0.0016 |              2.8943 |     28.1969 |                 0.6739 |                  0.4069 |
-| 01_poucas_cores.png      | kmeans  |                   16 |                    0.0165 |                 nan      |              1.1312 |     35.6572 |                 0.0978 |                  0.0635 |
-| 01_poucas_cores.png      | som     |                   16 |                    0.0405 |                   0.0137 |              2.8513 |     27.6    |                 0.0973 |                  0.0586 |
-| 02_gradiente_suave.png   | gng     |                   16 |                    0.0868 |                   0.0174 |              5.6036 |     25.0163 |                 0.3568 |                  0.049  |
-| 02_gradiente_suave.png   | kmeans  |                   16 |                    0.0588 |                 nan      |              3.8531 |     28.382  |                 0.1433 |                  0.0486 |
-| 02_gradiente_suave.png   | som     |                   16 |                    0.0843 |                   0.1578 |              5.3006 |     25.4528 |                 0.0617 |                  0.0468 |
-| 03_alta_saturacao.png    | gng     |                   16 |                    0.1608 |                   0.0054 |             10.5021 |     19.4942 |                 0.3533 |                  0.0465 |
-| 03_alta_saturacao.png    | kmeans  |                   16 |                    0.1145 |                 nan      |              7.2434 |     22.2572 |                 0.1366 |                  0.0876 |
-| 03_alta_saturacao.png    | som     |                   16 |                    0.1726 |                   0.0878 |             11.7345 |     18.4565 |                 0.0752 |                  0.0685 |
-| 04_cor_rara.png          | gng     |                   16 |                    0.0577 |                   0.0017 |              3.676  |     26.2188 |                 0.3424 |                  0.0601 |
-| 04_cor_rara.png          | kmeans  |                   16 |                    0.0461 |                 nan      |              2.8645 |     30.1435 |                 0.0959 |                  0.0539 |
-| 04_cor_rara.png          | som     |                   16 |                    0.0527 |                   0.2144 |              3.3473 |     26.1897 |                 0.0672 |                  0.0554 |
-| 05_cena_complexa.png     | gng     |                   16 |                    0.1084 |                   0.0664 |              8.3359 |     22.9697 |                 0.344  |                  0.0512 |
-| 05_cena_complexa.png     | kmeans  |                   16 |                    0.0877 |                 nan      |              6.771  |     25.0383 |                 0.0858 |                  0.0548 |
-| 05_cena_complexa.png     | som     |                   16 |                    0.1065 |                   0.2103 |              8.2828 |     22.8277 |                 0.0757 |                  0.0638 |
+| 00_controle_16_cores.png | gng     |                   16 |                    0.197  |                   0.1    |             12.1823 |     18.1541 |                 0.3569 |                  0.054  |
+| 00_controle_16_cores.png | kmeans  |                   16 |                    0.0079 |                 nan      |              0.5369 |     42.3464 |                 0.044  |                  0.06   |
+| 00_controle_16_cores.png | som     |                   16 |                    0.2153 |                   0.0003 |             14.6067 |     17.0575 |                 0.0997 |                  0.0734 |
+| 01_poucas_cores.png      | gng     |                   16 |                    0.0417 |                   0.0016 |              2.8943 |     28.1969 |                 0.3475 |                  0.0465 |
+| 01_poucas_cores.png      | kmeans  |                   16 |                    0.0165 |                 nan      |              1.1312 |     35.6572 |                 0.0971 |                  0.0629 |
+| 01_poucas_cores.png      | som     |                   16 |                    0.0405 |                   0.0137 |              2.8513 |     27.6    |                 0.0785 |                  0.0618 |
+| 02_gradiente_suave.png   | gng     |                   16 |                    0.0868 |                   0.0174 |              5.6036 |     25.0163 |                 0.3526 |                  0.0486 |
+| 02_gradiente_suave.png   | kmeans  |                   16 |                    0.0588 |                 nan      |              3.8531 |     28.382  |                 0.0945 |                  0.056  |
+| 02_gradiente_suave.png   | som     |                   16 |                    0.0843 |                   0.1578 |              5.3006 |     25.4528 |                 0.083  |                  0.0535 |
+| 03_alta_saturacao.png    | gng     |                   16 |                    0.1608 |                   0.0054 |             10.5021 |     19.4942 |                 0.3495 |                  0.0439 |
+| 03_alta_saturacao.png    | kmeans  |                   16 |                    0.1145 |                 nan      |              7.2434 |     22.2572 |                 0.1    |                  0.0472 |
+| 03_alta_saturacao.png    | som     |                   16 |                    0.1726 |                   0.0878 |             11.7345 |     18.4565 |                 0.0686 |                  0.0582 |
+| 04_cor_rara.png          | gng     |                   16 |                    0.0577 |                   0.0017 |              3.676  |     26.2188 |                 0.348  |                  0.0519 |
+| 04_cor_rara.png          | kmeans  |                   16 |                    0.0461 |                 nan      |              2.8645 |     30.1435 |                 0.1028 |                  0.0643 |
+| 04_cor_rara.png          | som     |                   16 |                    0.0527 |                   0.2144 |              3.3473 |     26.1897 |                 0.0633 |                  0.0499 |
+| 05_cena_complexa.png     | gng     |                   16 |                    0.1084 |                   0.0664 |              8.3359 |     22.9697 |                 0.3556 |                  0.0528 |
+| 05_cena_complexa.png     | kmeans  |                   16 |                    0.0877 |                 nan      |              6.771  |     25.0383 |                 0.0966 |                  0.0678 |
+| 05_cena_complexa.png     | som     |                   16 |                    0.1065 |                   0.2103 |              8.2828 |     22.8277 |                 0.1229 |                  0.0902 |
 
 ### 5.1 Erro de Quantização
 **Definição**: MSE médio entre pixels originais e reconstruídos.
@@ -765,7 +765,7 @@ projeto_2_redes_neurais/
 ### 10.7 Referência ao Repositório
 
 - **Versão do código**: Versionado com Git
-- **Data de geração**: 2026-10-07 16:22:20
+- **Data de geração**: 2026-10-07 17:24:11
 - **Reprodução**: `git clone <repo> && python scripts/execute_and_report.py --full`
 
 ### 10.8 Versões das Bibliotecas

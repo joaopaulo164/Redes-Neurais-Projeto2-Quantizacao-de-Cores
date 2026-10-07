@@ -29,6 +29,7 @@ make pipeline
 
 2. **Limpeza Segura**
    - Remove arquivos antigos de `outputs/`
+   - Remove arquivos antigos de `validation/`
    - Mantém estrutura de diretórios e `.gitkeep`
 
 3. **Execução Completa**
@@ -71,18 +72,21 @@ projeto_2_redes_neurais/
 │   ├── metrics/runs.csv
 │   └── tables/summary.csv
 │
-├── outputs_execucao_20261007_143022/ ← Backup anterior
+├── validation/                      ← Resultados ATUAIS da validação
+│   └── validation_unique_colors.csv
+│
+├── outputs_execucao_20261007_143022/ ← Backup anterior de outputs
 │   ├── checkpoints/
 │   ├── reconstructed/
 │   └── ...
 │
-├── outputs_execucao_20261007_102015/ ← Backup anterior
-│   └── ...
+├── validation_execucao_20261007_143022/ ← Backup anterior de validation
+│   └── validation_unique_colors.csv
 │
 └── EXECUCAO_RESUMO.txt               ← Resumo da última execução
 ```
 
-Isso permite **comparar e analisar múltiplas execuções** facilmente!
+Isso permite **comparar e analisar múltiplas execuções** de saída e validação facilmente!
 
 ---
 

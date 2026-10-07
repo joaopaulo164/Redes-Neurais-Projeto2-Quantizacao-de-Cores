@@ -63,13 +63,22 @@ Backup → Limpeza → Experimentos → Validação → Relatório → Resumo
 
 ### 1. **Backup** (automático)
 - Cria pasta: `outputs_execucao_YYYYMMDD_HHMMSS/`
+- Cria pasta: `validation_execucao_YYYYMMDD_HHMMSS/`
 - Preserva resultados anteriores
-- Permite comparar múltiplas execuções
+- Permite comparar múltiplas execuções de outputs e validation
 
 ### 2. **Limpeza Segura**
-- Remove outputs antigos
+- Remove arquivos antigos de `outputs/`
+- Remove arquivos antigos de `validation/`
 - Mantém .gitkeep e estrutura
 - Não deleta backups
+
+```text
+outputs/                      ← Resultados ATUAIS
+outputs_execucao_20261007_143022/   ← Backup #1 de outputs
+validation/                   ← Resultados ATUAIS da validação
+validation_execucao_20261007_143022/ ← Backup #1 de validation
+```
 
 ### 3. **Execução de Experimentos**
 - Roda matriz: 5 imagens × 3 modelos × 3 capacidades × 5 seeds
@@ -119,13 +128,13 @@ O arquivo `report/relatorio_final.md` é um **trabalho acadêmico completo** com
 ## 📁 Estrutura de Backups
 
 ```
-outputs/                    ← Resultados ATUAIS
-outputs_execucao_20261007_143022/  ← Backup #1 (guardado!)
-outputs_execucao_20261007_102015/  ← Backup #2 (guardado!)
-outputs_execucao_20261007_081530/  ← Backup #3 (guardado!)
+outputs/                          ← Resultados ATUAIS
+outputs_execucao_20261007_143022/   ← Backup #1 de outputs
+validation/                       ← Resultados ATUAIS da validação
+validation_execucao_20261007_143022/ ← Backup #1 de validation
 ```
 
-**Benefício**: Compare facilmente múltiplas execuções lado a lado!
+**Benefício**: Compare facilmente múltiplas execuções de saída e de validação.
 
 ---
 

@@ -108,16 +108,18 @@ clean-all             # Limpar tudo
 
 ```
 1. Backup
-   └─ Cria outputs_execucao_{TIMESTAMP}/
+   ├─ Cria outputs_execucao_{TIMESTAMP}/
+   └─ Cria validation_execucao_{TIMESTAMP}/
    
 2. Limpeza Segura
-   └─ Remove outputs antigos (mantém .gitkeep)
+   ├─ Remove outputs antigos (mantém .gitkeep)
+   └─ Remove validation antigos
    
 3. Execução de Experimentos
    └─ Roda matriz (5 imagens × 3 modelos × 3 capacidades × 5 seeds)
    
 4. Geração de Validações
-   └─ Verifica cores únicas
+   └─ Verifica cores únicas e salva em validation/
    
 5. Geração de Relatório
    └─ Cria report/relatorio_final.md (COMPLETO e estruturado)
@@ -131,13 +133,13 @@ clean-all             # Limpar tudo
 ## 📁 Estrutura de Backups
 
 ```
-outputs/                    ← Resultados ATUAIS
-outputs_execucao_20261007_143022/  ← Backup #1
-outputs_execucao_20261007_102015/  ← Backup #2
-outputs_execucao_20261007_081530/  ← Backup #3
+outputs/                          ← Resultados ATUAIS
+outputs_execucao_20261007_143022/    ← Backup #1 de outputs
+validation/                       ← Validação ATUAL
+validation_execucao_20261007_143022/ ← Backup #1 de validation
 ```
 
-**Benefício**: Compare múltiplas execuções lado a lado!
+**Benefício**: Compare múltiplas execuções de saída e de validação lado a lado!
 
 ---
 

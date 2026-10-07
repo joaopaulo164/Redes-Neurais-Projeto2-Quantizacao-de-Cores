@@ -1,13 +1,13 @@
 
 ╔════════════════════════════════════════════════════════════════╗
-║           RESUMO DA EXECUÇÃO - 20261007_162102            ║
+║           RESUMO DA EXECUÇÃO - 20261007_172255            ║
 ╚════════════════════════════════════════════════════════════════╝
 
 📊 ESTATÍSTICAS GERADAS:
   • Imagens reconstruídas: 18
   • Figuras de análise: 72
   • Checkpoints salvos: 18
-  • Pasta de backup: outputs_execucao_20261007_162102/
+  • Pasta de backup: outputs_execucao_20261007_172255/
 
 📂 ARQUIVOS PRINCIPAIS:
   • Métricas: outputs/metrics/runs.csv
@@ -21,11 +21,11 @@
   • Ver figuras: outputs/figures/
   • Ver métricas: outputs/tables/summary.csv
 
-⏱️  TIMESTAMP: 20261007_162102
+⏱️  TIMESTAMP: 20261007_172255
 🖥️  Projeto raiz: C:\Projetos\projeto_2_redes_neurais
 
 Para comparar com execução anterior:
-  • Backup salvo em: C:\Projetos\projeto_2_redes_neurais/outputs_execucao_20261007_162102
+  • Backup salvo em: C:\Projetos\projeto_2_redes_neurais/outputs_execucao_20261007_172255
   • Compare com: outputs/
 
 Para reexecutar:

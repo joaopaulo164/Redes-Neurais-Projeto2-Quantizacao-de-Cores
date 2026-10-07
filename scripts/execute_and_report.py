@@ -42,29 +42,41 @@ class ProjectExecution:
             print(f"[{step_num}] {text}")
 
     def backup_outputs(self):
-        """Faz backup da pasta outputs com timestamp."""
-        self.print_step(1, "Fazendo backup dos outputs", 6)
+        """Faz backup das pastas outputs e validation com timestamp."""
+        self.print_step(1, "Fazendo backup dos outputs e validation", 6)
 
-        if not self.outputs_dir.exists():
+        ok = True
+
+        if self.outputs_dir.exists():
+            backup_dir = self.root / f"outputs_execucao_{self.timestamp}"
+            try:
+                print(f"  📦 Copiando {self.outputs_dir} → {backup_dir.name}/")
+                shutil.copytree(self.outputs_dir, backup_dir, dirs_exist_ok=True)
+                num_files = sum(1 for _ in backup_dir.rglob("*") if _.is_file())
+                print(f"  ✅ Backup de outputs criado com {num_files} arquivos")
+            except Exception as e:
+                print(f"  ❌ Erro ao fazer backup de outputs: {e}")
+                ok = False
+        else:
             print("  ℹ️  Pasta outputs não existe ainda (primeira execução)")
-            return True
 
-        backup_dir = self.root / f"outputs_execucao_{self.timestamp}"
+        if self.validation_dir.exists():
+            validation_backup_dir = self.root / f"validation_execucao_{self.timestamp}"
+            try:
+                print(f"  📦 Copiando {self.validation_dir} → {validation_backup_dir.name}/")
+                shutil.copytree(self.validation_dir, validation_backup_dir, dirs_exist_ok=True)
+                num_files = sum(1 for _ in validation_backup_dir.rglob("*") if _.is_file())
+                print(f"  ✅ Backup de validation criado com {num_files} arquivos")
+            except Exception as e:
+                print(f"  ❌ Erro ao fazer backup de validation: {e}")
+                ok = False
+        else:
+            print("  ℹ️  Pasta validation não existe ainda (primeira execução)")
 
-        try:
-            print(f"  📦 Copiando {self.outputs_dir} → {backup_dir.name}/")
-            shutil.copytree(self.outputs_dir, backup_dir, dirs_exist_ok=True)
-            
-            # Contar arquivos
-            num_files = sum(1 for _ in backup_dir.rglob("*") if _.is_file())
-            print(f"  ✅ Backup criado com {num_files} arquivos")
-            return True
-        except Exception as e:
-            print(f"  ❌ Erro ao fazer backup: {e}")
-            return False
+        return ok
 
     def clean_outputs(self):
-        """Limpa as pastas de saída mantendo .gitkeep."""
+        """Limpa as pastas de saída mantendo a estrutura e .gitkeep."""
         self.print_step(2, "Limpando pastas de saída", 6)
 
         dirs_to_clean = [
@@ -74,20 +86,30 @@ class ProjectExecution:
             self.outputs_dir / "metrics",
             self.outputs_dir / "tables",
             self.outputs_dir / "logs",
+            self.validation_dir,
             self.validation_dir / "checkpoints",
         ]
 
         for directory in dirs_to_clean:
-            if directory.exists():
-                for file in directory.glob("*"):
-                    if file.is_file() and file.name != ".gitkeep":
-                        try:
-                            file.unlink()
-                            print(f"  🗑️  Removido: {directory.name}/{file.name}")
-                        except Exception as e:
-                            print(f"  ⚠️  Erro ao remover {file.name}: {e}")
-            else:
+            if not directory.exists():
                 directory.mkdir(parents=True, exist_ok=True)
+                continue
+
+            for item in directory.iterdir():
+                if item.name == ".gitkeep":
+                    continue
+                if item.is_dir():
+                    try:
+                        shutil.rmtree(item)
+                        print(f"  🗑️  Removido diretório: {item.relative_to(self.root)}")
+                    except Exception as e:
+                        print(f"  ⚠️  Erro ao remover diretório {item}: {e}")
+                elif item.is_file():
+                    try:
+                        item.unlink()
+                        print(f"  🗑️  Removido arquivo: {item.relative_to(self.root)}")
+                    except Exception as e:
+                        print(f"  ⚠️  Erro ao remover arquivo {item}: {e}")
 
         print("  ✅ Limpeza concluída!")
         return True
@@ -200,7 +222,8 @@ class ProjectExecution:
   • Imagens reconstruídas: {num_images}
   • Figuras de análise: {num_figures}
   • Checkpoints salvos: {num_checkpoints}
-  • Pasta de backup: outputs_execucao_{self.timestamp}/
+  • Backup de outputs: outputs_execucao_{self.timestamp}/
+  • Backup de validation: validation_execucao_{self.timestamp}/
 
 📂 ARQUIVOS PRINCIPAIS:
   • Métricas: outputs/metrics/runs.csv
@@ -218,8 +241,9 @@ class ProjectExecution:
 🖥️  Projeto raiz: {self.root}
 
 Para comparar com execução anterior:
-  • Backup salvo em: {self.root}/outputs_execucao_{self.timestamp}
-  • Compare com: outputs/
+  • Backup outputs: {self.root}/outputs_execucao_{self.timestamp}
+  • Backup validation: {self.root}/validation_execucao_{self.timestamp}
+  • Compare com: outputs/ e validation/
 
 Para reexecutar:
   python scripts/execute_and_report.py --full

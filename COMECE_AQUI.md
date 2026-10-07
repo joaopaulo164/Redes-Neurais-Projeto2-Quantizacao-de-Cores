@@ -75,7 +75,8 @@ Escolha a opção:
 
 ### Backup (automático)
 ```
-outputs_execucao_20261007_143022/  ← Seus resultados antigos guardados!
+outputs_execucao_20261007_143022/      ← Backup antigo de outputs
+validation_execucao_20261007_143022/  ← Backup antigo de validation
 ```
 
 ### Resultados (em `outputs/`)
@@ -85,6 +86,11 @@ reconstructed/   ← 225+ imagens quantizadas
 figures/         ← 225+ gráficos de análise
 metrics/runs.csv ← Todos os dados (5+ MB)
 tables/summary.csv ← Resumo agregado
+```
+
+### Validação (em `validation/`)
+```
+validation_unique_colors.csv ← validação final de cores únicas
 ```
 
 ### Relatório (em `report/`)
