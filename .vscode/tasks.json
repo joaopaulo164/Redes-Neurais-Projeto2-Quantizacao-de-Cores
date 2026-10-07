@@ -1,0 +1,133 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Setup: Install Dependencies",
+      "type": "shell",
+      "command": "python",
+      "args": ["-m", "pip", "install", "-r", "requirements.txt"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Test: Run Pytest",
+      "type": "shell",
+      "command": "python",
+      "args": ["-m", "pytest", "-q"],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": ["$python"]
+    },
+    {
+      "label": "Experiment: Single Run (Quick Demo)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "scripts/run_single.py",
+        "--image",
+        "data/raw/00_controle_16_cores.png",
+        "--model",
+        "som",
+        "--capacity",
+        "16",
+        "--seed",
+        "13"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Experiment: Full Matrix (All Experiments)",
+      "type": "shell",
+      "command": "python",
+      "args": ["scripts/run_all.py", "--config", "config/experiments.yaml"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "isBackground": false,
+      "problemMatcher": []
+    },
+    {
+      "label": "Experiment: Quick Test (Reduced Matrix)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "scripts/run_all.py",
+        "--config",
+        "config/experiments - teste rapido.yaml"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Report: Generate Markdown Report",
+      "type": "shell",
+      "command": "python",
+      "args": ["scripts/generate_report.py"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Validation: Unique Colors Check",
+      "type": "shell",
+      "command": "python",
+      "args": ["scripts/validate_unique_colors.py"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Full Pipeline: Setup → Test → Run All → Report",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-Command",
+        "python -m pip install -r requirements.txt; python -m pytest -q; python scripts/run_all.py --config config/experiments.yaml; python scripts/generate_report.py"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Clean: Remove Outputs",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-Command",
+        "Remove-Item outputs/checkpoints/* -Force -ErrorAction SilentlyContinue; Remove-Item outputs/reconstructed/* -Force -ErrorAction SilentlyContinue; Remove-Item outputs/figures/* -Force -ErrorAction SilentlyContinue; Remove-Item outputs/metrics/*.csv -Force -ErrorAction SilentlyContinue; Remove-Item outputs/tables/*.csv -Force -ErrorAction SilentlyContinue; Write-Host 'Outputs cleaned!'"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

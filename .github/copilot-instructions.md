@@ -61,6 +61,63 @@ python -m pytest -q
 python scripts/validate_unique_colors.py  # Color validation per experiment
 ```
 
+## Automation Options
+
+### 1. Interactive Menu (Recommended)
+```bash
+python scripts/automate.py
+# or
+python scripts/automate.py interactive
+```
+User-friendly menu with options to install, test, run experiments, generate reports, validate, clean outputs, and execute full pipeline.
+
+### 2. Command-Line Interface
+```bash
+python scripts/automate.py install      # Install dependencies
+python scripts/automate.py test         # Run tests
+python scripts/automate.py single       # Single demo experiment
+python scripts/automate.py full         # Full matrix
+python scripts/automate.py quick        # Quick test (reduced matrix)
+python scripts/automate.py report       # Generate report
+python scripts/automate.py validate     # Validate colors
+python scripts/automate.py clean        # Clean outputs
+python scripts/automate.py pipeline     # Full pipeline (install→test→run→report)
+```
+
+### 3. Make Commands (Unix/Linux/Git Bash)
+```bash
+make help              # Show all commands
+make install           # Install dependencies
+make test              # Run tests
+make single-demo       # Single experiment demo
+make quick-test        # Reduced matrix
+make full-matrix       # Complete matrix
+make report            # Generate report
+make validate          # Validate colors
+make clean             # Clean outputs
+make pipeline          # Full pipeline
+make interactive       # Interactive menu
+```
+
+### 4. VS Code Tasks
+Press **Ctrl+Shift+P** (Windows/Linux) or **Cmd+Shift+P** (macOS), type `Tasks: Run Task`, and select:
+- Setup: Install Dependencies
+- Test: Run Pytest
+- Experiment: Single Run (Quick Demo)
+- Experiment: Full Matrix
+- Experiment: Quick Test
+- Report: Generate Markdown Report
+- Validation: Unique Colors Check
+- Clean: Remove Outputs
+- Full Pipeline: Setup → Test → Run All → Report
+
+### 5. GitHub Actions (CI/CD)
+Automated workflow on `push`, scheduled daily, or manual trigger via GitHub Actions UI:
+- Runs tests on Python 3.10, 3.11, 3.12
+- Auto-executes quick test on push
+- Auto-executes full matrix daily (2 AM UTC)
+- Generates report and uploads artifacts
+
 ## Code Patterns & Conventions
 
 ### Reproducibility
