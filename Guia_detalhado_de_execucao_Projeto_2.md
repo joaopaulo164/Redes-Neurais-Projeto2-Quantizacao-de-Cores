@@ -1,6 +1,16 @@
 # Guia detalhado de execução
 ## Projeto 2: Quantização de cores com SOM, GNG e k-means
 
+## Índice de navegação
+
+- [README principal](README.md)
+- [Comece aqui](COMECE_AQUI.md)
+- [Guia de automação](AUTOMACAO.md)
+- [Quick start](AUTOMATE_QUICK_START.md)
+- [Pipeline completo](PIPELINE_COMPLETO.md)
+
+---
+
 Este guia apresenta o processo completo para preparar o ambiente, selecionar as imagens, validar a implementação, executar os experimentos e gerar as evidências do relatório. Recomenda-se realizar primeiro uma execução reduzida de validação e somente depois iniciar o protocolo completo, pois a matriz oficial pode chegar a **225 execuções** com cinco imagens.
 
 ---

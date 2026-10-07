@@ -1,0 +1,12 @@
+device: cpu
+output_dir: outputs_teste
+data_dir: data/raw
+seeds: [13]
+capacities: [16]
+models: [som, kmeans]
+max_train_pixels: 50000
+inference_batch_size: 32768
+
+som: {epochs: 5, batch_size: 256, lr0: 0.5, lrf: 0.05, sigma_final: 0.5}
+gng: {steps: 10000, eps_b: 0.05, eps_n: 0.0006, insertion_interval: 100, max_edge_age: 90, alpha: 0.5, beta: 0.005}
+kmeans: {max_iter: 50, tolerance: 0.0001}

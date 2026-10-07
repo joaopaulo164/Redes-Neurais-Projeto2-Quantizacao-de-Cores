@@ -1,6 +1,16 @@
 # README do `.gitignore`
 ## Projeto 2: Quantização de cores com SOM, GNG e k-means
 
+## Índice de navegação
+
+- [README principal](README.md)
+- [Comece aqui](COMECE_AQUI.md)
+- [Guia de automação](AUTOMACAO.md)
+- [Quick start](AUTOMATE_QUICK_START.md)
+- [Pipeline completo](PIPELINE_COMPLETO.md)
+
+## Descrição
+
 Este documento explica as decisões adotadas no arquivo `.gitignore` do projeto. O objetivo é manter o repositório **reproduzível, leve e independente do ambiente local**, evitando o versionamento de ambientes virtuais, caches, credenciais, resultados intermediários, modelos treinados e configurações pessoais de IDE.
 
 ---

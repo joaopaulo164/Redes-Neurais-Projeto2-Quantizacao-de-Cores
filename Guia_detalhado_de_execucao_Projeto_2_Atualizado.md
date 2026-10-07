@@ -1,6 +1,14 @@
 # Guia detalhado de execução
 ## Projeto 2: Quantização de cores com SOM, GNG e k-means
 
+## Índice de navegação
+
+- [README principal](README.md)
+- [Comece aqui](COMECE_AQUI.md)
+- [Guia de automação](AUTOMACAO.md)
+- [Quick start](AUTOMATE_QUICK_START.md)
+- [Pipeline completo](PIPELINE_COMPLETO.md)
+
 Este guia apresenta o processo completo para preparar o ambiente local, validar a implementação, organizar as imagens, executar os experimentos e gerar as evidências do relatório.
 
 > **Atualização para Windows CMD:** os comandos para o Prompt de Comando do Windows foram incluídos. Para executar os testes, utilize preferencialmente `python -m pytest -q`, pois esse comando garante o uso do pytest associado ao interpretador Python da `.venv`.

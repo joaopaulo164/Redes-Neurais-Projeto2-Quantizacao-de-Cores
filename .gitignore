@@ -222,6 +222,10 @@ outputs/logs/*
 !outputs/logs/.gitkeep
 
 
+outputs_execucao01/*
+validation_execucao01/*
+
+
 # ------------------------------------------------------------
 # Checkpoints e modelos treinados
 # ------------------------------------------------------------
@@ -306,6 +310,15 @@ runs/
 *.tgz
 *.7z
 *.rar
+
+# Adicionados
 outputs/output_figures.pdf
 outputs/output_reconstructed.pdf
 outputs/
+
+# ------------------------------------------------------------
+# Backups de execução
+# ------------------------------------------------------------
+
+outputs_execucao_*/
+validation_execucao_*/

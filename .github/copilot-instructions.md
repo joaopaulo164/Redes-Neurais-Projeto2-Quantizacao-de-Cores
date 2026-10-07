@@ -61,53 +61,77 @@ python -m pytest -q
 python scripts/validate_unique_colors.py  # Color validation per experiment
 ```
 
-## Code Patterns & Conventions
+## Project Automation & Backup Discipline
+- **Execution backup pattern**: `outputs_execucao_YYYYMMDD_HHMMSS/` and `validation_execucao_YYYYMMDD_HHMMSS/` are created before each pipeline run
+- **Cleanup policy**: both `outputs/` and `validation/` are reset before running experiments so each execution starts from a clean state
+- **Safety rule**: backup folders are never deleted by the cleanup step; they are preserved for comparison and auditing
+- **Git ignore policy**: use wildcard patterns such as `outputs_execucao_*/` and `validation_execucao_*/` to keep timestamped backups out of version control
 
-### Reproducibility
-- **All randomness seeded**: `torch.Generator(device=device).manual_seed(seed)` in model init/fit
-- **Train sample fixed per image/seed**: `sample_pixels()` uses seed; inference uses full image
-- **Device fallback**: Code checks `torch.cuda.is_available()`, defaults CPU
+## Automation Options
 
-### Tensor Conventions
-- **RGB tensors**: shape `(N, 3)`, dtype `float32`, range [0,1] (normalized by PIL read, denormalized on save)
-- **Batch processing**: All `.predict_bmu()` / `.quantize()` use `batch_size` to avoid memory overflow
-- **Assignments**: BMU indices stored as assignment tensor; used for metrics (entropy, active neurons)
+### 1. Interactive Menu (Recommended)
+```bash
+python scripts/automate.py
+# or
+python scripts/automate.py interactive
+```
+User-friendly menu with options to install dependencies, run tests, execute a demo, run the full matrix, generate reports, validate unique colors, clean generated outputs, and run the full backup→clean→run→report pipeline.
 
-### File Naming
-- **Checkpoints**: `{image_stem}_{model}_{capacity}_s{seed}.pt` (e.g., `cat_som_16_s13.pt`)
-- **Keys**: Same prefix used for figures, reconstructed images, CSV row identifier
+### 2. Command-Line Interface
+```bash
+python scripts/automate.py install      # Install dependencies
+python scripts/automate.py test         # Run tests
+python scripts/automate.py single       # Single demo experiment
+python scripts/automate.py full         # Full matrix
+python scripts/automate.py quick        # Quick test (reduced matrix)
+python scripts/automate.py report       # Generate report
+python scripts/automate.py validate     # Validate colors
+python scripts/automate.py clean        # Clean outputs
+python scripts/automate.py pipeline     # Full pipeline (install→test→run→report)
+```
 
-### Metrics Pipeline (`src/metrics/evaluation.py`)
-- `evaluate(x_original, x_reconstructed, shape)` - Quantization error, image-level metrics (MAE, MSE, RMSE, PSNR), Delta E per pixel
-- `usage(assignments, n_prototypes)` - Active/inactive neurons, usage entropy
-- `topology(model, x, model_name, batch_size)` - Topographic error (ratio of incorrectly ordered nearest neighbors)
+### 3. Full Pipeline Script
+```bash
+python scripts/execute_and_report.py --quick
+python scripts/execute_and_report.py --full
+python scripts/execute_and_report.py --backup-only
+python scripts/execute_and_report.py --clean-only
+```
+This script creates timestamped backups for both `outputs/` and `validation/`, then removes old generated content before rerunning the experiments and report generation.
 
-### Visualization Patterns (`src/visualization/plots.py`)
-- **Output**: Multi-panel figures (original, reconstructed, Delta E heatmap, histograms, prototype cloud)
-- **GNG-specific**: Plots neural graph (edges as lines, nodes as points)
+### 4. Make Commands (Unix/Linux/Git Bash)
+```bash
+make help              # Show all commands
+make install           # Install dependencies
+make test              # Run tests
+make single-demo       # Single experiment demo
+make quick-test        # Reduced matrix
+make full-matrix       # Complete matrix
+make report            # Generate report
+make validate          # Validate colors
+make clean             # Clean outputs
+make pipeline          # Full pipeline
+make interactive       # Interactive menu
+```
 
-## Common Task Patterns
+### 5. VS Code Tasks
+Press **Ctrl+Shift+P** (Windows/Linux) or **Cmd+Shift+P** (macOS), type `Tasks: Run Task`, and select:
+- Setup: Install Dependencies
+- Test: Run Pytest
+- Experiment: Single Run (Quick Demo)
+- Experiment: Full Matrix
+- Experiment: Quick Test
+- Report: Generate Markdown Report
+- Validation: Unique Colors Check
+- Clean: Remove Outputs
+- Full Pipeline: Setup → Test → Run All → Report
 
-### Adding a New Model
-1. Inherit from `Base` in `src/models/quantizers.py`
-2. Implement: `fit(x)`, `predict_bmu(x, batch_size)`, `prototypes()`, `state_dict()`
-3. Add hyperparams to config YAML and `build()` function in `src/experiments/runner.py`
-4. Add unit test to `tests/test_models.py`
-
-### Modifying Metrics
-- Edit `src/metrics/evaluation.py` `evaluate()` function
-- New metrics appear in `outputs/metrics/runs.csv` automatically
-- Update `runner.py` `aggregate()` metric list for summary CSV
-
-### Tuning Hyperparameters
-- Edit `config/experiments.yaml` or create variant (e.g., `experiments-quick.yaml`)
-- Run: `python scripts/run_all.py --config config/experiments-quick.yaml`
-- Quick test: 1-2 images, 1-2 seeds, single capacity (avoid 225+ runs)
-
-## Testing & Validation
-- **Unit tests**: `pytest` checks model shapes in-memory (minimal data)
-- **Integration**: Run single experiment, inspect `outputs/reconstructed/*.png`, `outputs/metrics/runs.csv`
-- **Color validation**: `validate_unique_colors.py` ensures quantizer uses distinct prototypes (avoid duplicates)
+### 6. GitHub Actions (CI/CD)
+Automated workflow on `push`, scheduled daily, or manual trigger via GitHub Actions UI:
+- Runs tests on Python 3.10, 3.11, 3.12
+- Auto-executes quick test on push
+- Auto-executes full matrix daily (2 AM UTC)
+- Generates report and uploads artifacts
 
 ## Output Structure
 ```
@@ -117,10 +141,17 @@ outputs/
   figures/              ← Per-experiment plots (.png)
   metrics/runs.csv      ← Raw results (5+ MB after full matrix)
   tables/summary.csv    ← Aggregated mean/std by image/model/capacity
+
+validation/
+  validation_unique_colors.csv  ← Unique-color validation summary
+
+backup folders (timestamped):
+  outputs_execucao_YYYYMMDD_HHMMSS/
+  validation_execucao_YYYYMMDD_HHMMSS/
 ```
 
-## Critical Edge Cases
-- **Empty image folder**: `run_all.py` detects no images, logs "0 images found"
-- **Insufficient CUDA memory**: Device fallback to CPU handled; no error thrown
-- **Capacity > image pixels**: All pixels become unique prototypes; GNG skips insertion
-- **Seed consistency**: Must manually reset seeds between independent runs (scripts do this)
+## Validation & Evidence
+- **Validation script**: `scripts/validate_unique_colors.py` checks whether each reconstructed image uses no more unique colors than the configured capacity
+- **Validation output**: CSV file in `validation/` with per-image status and counts
+- **Execution evidence**: backup folders preserve prior validation runs and output artifacts for comparison
+- **Reproducibility expectation**: a fresh run should produce a clean `outputs/` and `validation/` while retaining old backups for audit and diffing
