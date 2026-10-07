@@ -1,5 +1,15 @@
 # 🤖 Guia de Automação - Projeto 2
 
+## Navegação rápida
+
+- [README principal](README.md)
+- [Comece aqui](COMECE_AQUI.md)
+- [Atalhos rápidos](AUTOMATE_QUICK_START.md)
+- [Pipeline completo](PIPELINE_COMPLETO.md)
+- [Resumo executivo](AUTOMACAO_RESUMO.md)
+
+---
+
 Este guia descreve as várias maneiras de automatizar a execução do projeto de quantização de cores com redes neurais.
 
 ## Opção 1: Menu Interativo (Recomendado para Iniciantes)

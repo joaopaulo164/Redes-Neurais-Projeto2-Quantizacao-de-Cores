@@ -1,5 +1,14 @@
 # 🎯 Comece Aqui em 60 Segundos
 
+## Navegação rápida
+
+- [README principal](README.md)
+- [Guia de automação](AUTOMACAO.md)
+- [Atalhos rápidos](AUTOMATE_QUICK_START.md)
+- [Pipeline completo](PIPELINE_COMPLETO.md)
+- [Resumo executivo](AUTOMACAO_RESUMO.md)
+- [Guia de execução detalhado](Guia_detalhado_de_execucao_Projeto_2_Atualizado.md)
+
 ## O que foi criado para você?
 
 Uma **automação completa** que faz:

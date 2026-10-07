@@ -1,5 +1,13 @@
 # ⚡ Quick Start - Automação
 
+## Navegação rápida
+
+- [README principal](README.md)
+- [Comece aqui](COMECE_AQUI.md)
+- [Guia de automação](AUTOMACAO.md)
+- [Pipeline completo](PIPELINE_COMPLETO.md)
+- [Resumo executivo](AUTOMACAO_RESUMO.md)
+
 ## 🎯 Comece em 30 segundos
 
 ### Opção A: Menu Interativo (Mais Fácil)

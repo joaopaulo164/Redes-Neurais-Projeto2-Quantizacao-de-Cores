@@ -235,4 +235,16 @@ python scripts/execute_and_report.py --clean-only && python scripts/execute_and_
 
 ---
 
+# 🔄 Pipeline Completo do Projeto
+
+## Navegação rápida
+
+- [README principal](README.md)
+- [Comece aqui](COMECE_AQUI.md)
+- [Guia de automação](AUTOMACAO.md)
+- [Atalhos rápidos](AUTOMATE_QUICK_START.md)
+- [Resumo executivo](AUTOMACAO_RESUMO.md)
+
+---
+
 **Criado para facilitar a execução reprodutível e documentação completa do Projeto 2! 🎉**

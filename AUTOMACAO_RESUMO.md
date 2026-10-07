@@ -1,5 +1,15 @@
 # ✨ Resumo da Automação Implementada
 
+## Navegação rápida
+
+- [README principal](README.md)
+- [Comece aqui](COMECE_AQUI.md)
+- [Guia de automação](AUTOMACAO.md)
+- [Atalhos rápidos](AUTOMATE_QUICK_START.md)
+- [Pipeline completo](PIPELINE_COMPLETO.md)
+
+---
+
 ## O que foi criado
 
 ### 1. **Script de Execução Completa** (`scripts/execute_and_report.py`)
