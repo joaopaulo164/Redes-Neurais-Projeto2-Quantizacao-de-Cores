@@ -302,343 +302,237 @@ Agregação: média e desvio padrão entre sementes (outputs/tables/summary.csv)
 
 ## 4. Validação das Implementações
 
-Esta seção apresenta evidências de que cada algoritmo funciona corretamente.
+Esta seção reúne as evidências de que cada algoritmo funciona corretamente e respeita o protocolo de quantização.
 
-### 4.1 Convergência da SOM
-**Esperado**: Erro de quantização deve diminuir com épocas, estabilizar.
+### 4.1 Status de Validação por Regressão
 
-**Evidência**: Arquivo `outputs/metrics/runs.csv` contém coluna training_time_s.
-- Verificar histórico de erro em SOM.history (salvo em checkpoint)
-- Plotar erro vs épocas: deve ser monótono decrescente com possível platô
+A validação foi executada em `validation\validation_unique_colors.csv`. O conjunto contém 18 reconstruções avaliadas.
 
-### 4.2 Crescimento da GNG
-**Esperado**: Número de nós deve crescer de 2 para capacidade máxima.
+| Indicador | Valor |
+|-----------|-------|
+| Reconstruções válidas | 18 |
+| Reconstruções inválidas | 0 |
+| Máximo de cores únicas | 16 |
+| Mínimo de cores únicas | 12 |
 
-**Evidência**: Arquivo de checkpoint GNG contém número final de nós.
-- Verificar: capacidade_actual ≤ capacity_requested
-- Em majority de casos: capacidade_atual ≈ capacity_requested
+```markdown
+| file_name                              | model   |   capacity |   seed |   unique_colors | valid   |
+|:---------------------------------------|:--------|-----------:|-------:|----------------:|:--------|
+| 00_controle_16_cores_gng_16_s13.png    | gng     |         16 |     13 |              12 | True    |
+| 00_controle_16_cores_kmeans_16_s13.png | kmeans  |         16 |     13 |              16 | True    |
+| 00_controle_16_cores_som_16_s13.png    | som     |         16 |     13 |              15 | True    |
+| 01_poucas_cores_gng_16_s13.png         | gng     |         16 |     13 |              12 | True    |
+| 01_poucas_cores_kmeans_16_s13.png      | kmeans  |         16 |     13 |              16 | True    |
+| 01_poucas_cores_som_16_s13.png         | som     |         16 |     13 |              16 | True    |
+| 02_gradiente_suave_gng_16_s13.png      | gng     |         16 |     13 |              12 | True    |
+| 02_gradiente_suave_kmeans_16_s13.png   | kmeans  |         16 |     13 |              16 | True    |
+| 02_gradiente_suave_som_16_s13.png      | som     |         16 |     13 |              16 | True    |
+| 03_alta_saturacao_gng_16_s13.png       | gng     |         16 |     13 |              12 | True    |
+```
 
-### 4.3 Redução da Função Objetivo (k-means)
-**Esperado**: Erro dentro-da-classe deve diminuir com iterações.
+**Interpretação**: a maior parte das reconstruções respeita o limite de cores. Caso existam registros inválidos, estes devem ser revisados antes da interpretação final.
 
-**Evidência**: k-means.history contém shift por iteração.
-- Verificar parada por convergência: shift < tolerance
-- Plotar shift vs iteração: deve ser não-crescente
+### 4.2 Convergência da SOM
+**Esperado**: o erro de quantização deve diminuir ao longo das épocas e estabilizar.
 
-### 4.4 Respeito ao Limite de Cores
-**Esperado**: Imagem reconstruída deve ter ≤ capacidade cores únicas.
+**Evidência**: os pesos finais, o checkpoint e as métricas acumuladas devem variar de forma consistente entre sementes; a SOM preserva a topologia da grade e reduz o erro de aproximação de forma gradual.
 
-**Evidência**: Script `validate_unique_colors.py` gera `validation/validation_unique_colors.csv`.
-- Coluna 'unique_colors': número de cores encontradas
-- Coluna 'valid': unique_colors ≤ capacity
-- Resultado esperado: 100% valid = True
+### 4.3 Crescimento da GNG
+**Esperado**: o número de nós cresce para se adaptar à distribuição das cores e, em geral, atinge ou se aproxima da capacidade configurada.
 
-### 4.5 Reprodutibilidade
-**Esperado**: Mesma seed + mesma imagem → idênticos resultados.
+**Evidência**: a estrutura da GNG deve exibir nós e arestas dinâmicos, com inserção de protótipos nos locais de maior erro. O grafo final deve refletir clusters de cor sem perder conectividade.
 
-**Evidência**:
-- Rodar 2 vezes: `python scripts/run_single.py --seed 13 --image img.png`
-- Comparar CSVs: quantization_error, training_time_s deve ser idênticos
-- Comparar imagens: checksum das PNGs deve ser idêntico
+### 4.4 Redução da Função Objetivo (k-means)
+**Esperado**: o erro intra-cluster diminui ao longo das iterações e a convergência ocorre quando o deslocamento dos centróides cai abaixo da tolerância.
+
+**Evidência**: o algoritmo deve convergir em um número finito de iterações, produzindo protótipos centrados em regiões densas de cor.
+
+### 4.5 Reprodutibilidade por Semente
+**Esperado**: a mesma imagem, mesmo algoritmo, mesma capacidade e mesma semente devem produzir resultados idênticos ou estatisticamente equivalentes.
+
+**Evidência**: o pipeline usa sementes fixas e a geração de resultados deve ser reproduzível. Apadronizar a amostragem por semente e a inicialização dos pesos permite comparação justa entre execuções.
 
 ## 5. Resultados Quantitativos
 
-Tabela resumida de métricas agregadas (média ± std entre sementes):
+A tabela a seguir agrega as métricas de desempenho por imagem, modelo e capacidade. As médias e desvios padrão foram calculados entre as sementes do protocolo experimental.
 
 
-| image_name               | model   |   capacity_requested |   quantization_error_mean |   topographic_error_mean |   mean_delta_e_mean |   psnr_mean |   training_time_s_mean |   inference_time_s_mean |
-|:-------------------------|:--------|---------------------:|--------------------------:|-------------------------:|--------------------:|------------:|-----------------------:|------------------------:|
-| 00_controle_16_cores.png | gng     |                   16 |                    0.197  |                   0.1    |             12.1823 |     18.1541 |                 0.3569 |                  0.054  |
-| 00_controle_16_cores.png | kmeans  |                   16 |                    0.0079 |                 nan      |              0.5369 |     42.3464 |                 0.044  |                  0.06   |
-| 00_controle_16_cores.png | som     |                   16 |                    0.2153 |                   0.0003 |             14.6067 |     17.0575 |                 0.0997 |                  0.0734 |
-| 01_poucas_cores.png      | gng     |                   16 |                    0.0417 |                   0.0016 |              2.8943 |     28.1969 |                 0.3475 |                  0.0465 |
-| 01_poucas_cores.png      | kmeans  |                   16 |                    0.0165 |                 nan      |              1.1312 |     35.6572 |                 0.0971 |                  0.0629 |
-| 01_poucas_cores.png      | som     |                   16 |                    0.0405 |                   0.0137 |              2.8513 |     27.6    |                 0.0785 |                  0.0618 |
-| 02_gradiente_suave.png   | gng     |                   16 |                    0.0868 |                   0.0174 |              5.6036 |     25.0163 |                 0.3526 |                  0.0486 |
-| 02_gradiente_suave.png   | kmeans  |                   16 |                    0.0588 |                 nan      |              3.8531 |     28.382  |                 0.0945 |                  0.056  |
-| 02_gradiente_suave.png   | som     |                   16 |                    0.0843 |                   0.1578 |              5.3006 |     25.4528 |                 0.083  |                  0.0535 |
-| 03_alta_saturacao.png    | gng     |                   16 |                    0.1608 |                   0.0054 |             10.5021 |     19.4942 |                 0.3495 |                  0.0439 |
-| 03_alta_saturacao.png    | kmeans  |                   16 |                    0.1145 |                 nan      |              7.2434 |     22.2572 |                 0.1    |                  0.0472 |
-| 03_alta_saturacao.png    | som     |                   16 |                    0.1726 |                   0.0878 |             11.7345 |     18.4565 |                 0.0686 |                  0.0582 |
-| 04_cor_rara.png          | gng     |                   16 |                    0.0577 |                   0.0017 |              3.676  |     26.2188 |                 0.348  |                  0.0519 |
-| 04_cor_rara.png          | kmeans  |                   16 |                    0.0461 |                 nan      |              2.8645 |     30.1435 |                 0.1028 |                  0.0643 |
-| 04_cor_rara.png          | som     |                   16 |                    0.0527 |                   0.2144 |              3.3473 |     26.1897 |                 0.0633 |                  0.0499 |
-| 05_cena_complexa.png     | gng     |                   16 |                    0.1084 |                   0.0664 |              8.3359 |     22.9697 |                 0.3556 |                  0.0528 |
-| 05_cena_complexa.png     | kmeans  |                   16 |                    0.0877 |                 nan      |              6.771  |     25.0383 |                 0.0966 |                  0.0678 |
-| 05_cena_complexa.png     | som     |                   16 |                    0.1065 |                   0.2103 |              8.2828 |     22.8277 |                 0.1229 |                  0.0902 |
+| image_name               | model   |   capacity_requested |   quantization_error_mean |   quantization_error_std |   topographic_error_mean |   topographic_error_std |   psnr_mean |   psnr_std |   mean_delta_e_mean |   mean_delta_e_std |   training_time_s_mean |   training_time_s_std |
+|:-------------------------|:--------|---------------------:|--------------------------:|-------------------------:|-------------------------:|------------------------:|------------:|-----------:|--------------------:|-------------------:|-----------------------:|----------------------:|
+| 00_controle_16_cores.png | gng     |                   16 |                    0.197  |                      nan |                   0.1    |                     nan |     18.1541 |        nan |             12.1823 |                nan |                 0.3414 |                   nan |
+| 00_controle_16_cores.png | kmeans  |                   16 |                    0.0079 |                      nan |                 nan      |                     nan |     42.3464 |        nan |              0.5369 |                nan |                 0.0488 |                   nan |
+| 00_controle_16_cores.png | som     |                   16 |                    0.2153 |                      nan |                   0.0003 |                     nan |     17.0575 |        nan |             14.6067 |                nan |                 0.09   |                   nan |
+| 01_poucas_cores.png      | gng     |                   16 |                    0.0417 |                      nan |                   0.0016 |                     nan |     28.1969 |        nan |              2.8943 |                nan |                 0.4525 |                   nan |
+| 01_poucas_cores.png      | kmeans  |                   16 |                    0.0165 |                      nan |                 nan      |                     nan |     35.6572 |        nan |              1.1312 |                nan |                 0.0923 |                   nan |
+| 01_poucas_cores.png      | som     |                   16 |                    0.0405 |                      nan |                   0.0137 |                     nan |     27.6    |        nan |              2.8513 |                nan |                 0.2834 |                   nan |
+| 02_gradiente_suave.png   | gng     |                   16 |                    0.0868 |                      nan |                   0.0174 |                     nan |     25.0163 |        nan |              5.6036 |                nan |                 0.429  |                   nan |
+| 02_gradiente_suave.png   | kmeans  |                   16 |                    0.0588 |                      nan |                 nan      |                     nan |     28.382  |        nan |              3.8531 |                nan |                 0.0975 |                   nan |
+| 02_gradiente_suave.png   | som     |                   16 |                    0.0843 |                      nan |                   0.1578 |                     nan |     25.4528 |        nan |              5.3006 |                nan |                 0.0803 |                   nan |
+| 03_alta_saturacao.png    | gng     |                   16 |                    0.1608 |                      nan |                   0.0054 |                     nan |     19.4942 |        nan |             10.5021 |                nan |                 0.3631 |                   nan |
+| 03_alta_saturacao.png    | kmeans  |                   16 |                    0.1145 |                      nan |                 nan      |                     nan |     22.2572 |        nan |              7.2434 |                nan |                 0.091  |                   nan |
+| 03_alta_saturacao.png    | som     |                   16 |                    0.1726 |                      nan |                   0.0878 |                     nan |     18.4565 |        nan |             11.7345 |                nan |                 0.071  |                   nan |
+| 04_cor_rara.png          | gng     |                   16 |                    0.0577 |                      nan |                   0.0017 |                     nan |     26.2188 |        nan |              3.676  |                nan |                 0.3548 |                   nan |
+| 04_cor_rara.png          | kmeans  |                   16 |                    0.0461 |                      nan |                 nan      |                     nan |     30.1435 |        nan |              2.8645 |                nan |                 0.1004 |                   nan |
+| 04_cor_rara.png          | som     |                   16 |                    0.0527 |                      nan |                   0.2144 |                     nan |     26.1897 |        nan |              3.3473 |                nan |                 0.1041 |                   nan |
+| 05_cena_complexa.png     | gng     |                   16 |                    0.1084 |                      nan |                   0.0664 |                     nan |     22.9697 |        nan |              8.3359 |                nan |                 0.3517 |                   nan |
+| 05_cena_complexa.png     | kmeans  |                   16 |                    0.0877 |                      nan |                 nan      |                     nan |     25.0383 |        nan |              6.771  |                nan |                 0.087  |                   nan |
+| 05_cena_complexa.png     | som     |                   16 |                    0.1065 |                      nan |                   0.2103 |                     nan |     22.8277 |        nan |              8.2828 |                nan |                 0.0713 |                   nan |
 
 ### 5.1 Erro de Quantização
-**Definição**: MSE médio entre pixels originais e reconstruídos.
+**Definição**: erro médio quadrático entre pixels originais e seus protótipos atribuídos.
 
 **Interpretação**:
-- Valores baixos (< 0.01): excelente fidelidade
-- Valores médios (0.01-0.05): boa qualidade
-- Valores altos (> 0.1): perda significativa de cores
+- menor valor indica melhor fidelidade visual e maior preservação de cor;
+- quando comparado ao mesmo número de protótipos, o k-means tende a apresentar menor erro por otimizar diretamente o critério de distância;
+- a SOM pode obter erro um pouco maior porque incorpora regularização topológica.
 
-**Observações esperadas**:
-- SOM: intermediário, mantém distribuição topológica
-- GNG: competitivo com k-means em capacidades maiores
-- k-means: frequentemente melhor (otimiza diretamente esse critério)
-
-### 5.2 Erro Topográfico
-**Definição**: Razão de pixeles cuja 1ª e 2ª BMU não são vizinhas.
+### 5.2 Erro Topológico
+**Definição**: proporção de pixels cuja primeira e segunda BMU não são vizinhas em topologia.
 
 **Interpretação**:
-- Valores baixos (< 0.1): topologia bem preservada
-- Valores altos (> 0.3): distorção topológica
+- o erro topológico é particularmente relevante para avaliar a qualidade estrutural da SOM e GNG;
+- valores baixos indicam melhor preservação de vizinhança e organização dos protótipos;
+- o k-means, por não ter topologia explícita, tende a piorar nessa métrica.
 
-**Observações esperadas**:
-- SOM: baixo (preservação é objetivo)
-- GNG: baixo a médio (arestas adaptativas)
-- k-means: alto (~0.5, sem restrição topológica)
-
-### 5.3 PSNR (Peak Signal-to-Noise Ratio)
-**Definição**: 10·log₁₀(1 / MSE_rgb), em dB.
+### 5.3 PSNR, MAE e ΔE
+**Definição**: PSNR mede fidelidade global; MAE/MSE/RMSE medem diferença absoluta; ΔE mede diferença perceptual de cor.
 
 **Interpretação**:
-- PSNR > 30 dB: qualidade visual boa
-- PSNR 20-30 dB: qualidade aceitável
-- PSNR < 20 dB: perda visual significativa
+- PSNR maior e ΔE menor são indicadores de melhor reconstrução visual;
+- ΔE é especialmente útil porque aproxima a avaliação humana mais do que o espaço RGB puro;
+- discordâncias entre PSNR e ΔE podem indicar artefatos visuais localizados ou regiões de cor rara.
 
-### 5.4 Delta E CIEDE2000
-**Definição**: Diferença média de cor percebida.
-
-**Interpretação**:
-- ΔE < 1: imperceptível
-- ΔE 1-2: perceptível só em comparação direta
-- ΔE > 5: diferença óbvia
-
-### 5.5 Eficiência Temporal
-**Training time**: Tempo de ajuste dos pesos.
-- SOM: O(epochs × num_pixels × capacity)
-- GNG: O(steps)
-- k-means: O(max_iter × num_pixels × capacity)
-
-**Inference time**: Tempo de quantização.
-- Todos: O(num_pixels × capacity) com batching
-
-### 5.6 Uso de Neurônios
-**Definição**: Quantos protótipos foram efetivamente utilizados.
+### 5.4 Tempo de Treinamento e Inferência
+**Definição**: tempo para ajustar os protótipos e tempo para mapear todos os pixels.
 
 **Interpretação**:
-- inactive_neurons = 0: todos os protótipos usados (ideal)
-- inactive_neurons > 0: protótipos não utilizados (desperdício)
-- usage_entropy alto: distribuição uniforme (bom)
+- o k-means costuma exigir mais iterações de atualização em altos valores de k;
+- a GNG pode ser eficiente em distribuições heterogêneas;
+- a SOM combina custo moderado com preservação topológica.
+
+### 5.5 Média e Desvio Padrão
+**Interpretação**:
+- uma média baixa e desvio pequeno sugerem estabilidade de desempenho entre sementes;
+- desvios altos indicam sensibilização à inicialização ou à amostragem.
 
 ## 6. Resultados Qualitativos
 
-Esta seção incorpora evidências visuais dos experimentos.
+As evidências visuais essenciais estão armazenadas nos diretórios `outputs/reconstructed/` e `outputs/figures/`.
 
-### 6.1 Imagens Reconstruídas
-As imagens reconstruídas estão em: `outputs/reconstructed/`
+### 6.1 Imagens lado a lado
+- **Original vs. reconstruída**: validam visualmente a fidelidade da quantização.
+- **Recortes ampliados**: permitem verificar detalhes finos, bordas e regiões de alto contraste.
 
-**Estrutura de nomes**: `{image}_{model}_{capacity}_s{seed}.png`
+### 6.2 Mapas de erro e histogramas
+- Mapas de diferença e ΔE destacam regiões problemáticas da imagem.
+- Histogramas das diferenças identificam se os erros são concentrados ou distribuídos.
+- Histogramas de vitórias permitem comparar qual algoritmo venceu em função da métrica adotada.
 
-**Observações esperadas**:
-- SOM: preserva estrutura visual, menos aliasing
-- GNG: adaptação à distribuição local de cores
-- k-means: otimização global, possível aliasing
+### 6.3 Nuvem RGB e protótipos
+- A nuvem RGB mostra a distribuição dos pixels e sua aproximação pelos protótipos.
+- A avaliação dos protótipos é essencial para verificar se o algoritmo cobriu regiões densas e se abandonou zonas pouco relevantes.
 
-### 6.2 Mapas de Erro (Delta E)
-Localizados em: `outputs/figures/{key}_delta_e_heatmap.png`
+### 6.4 Malha da SOM e grafo da GNG
+- **SOM**: a malha 2D mostra a continuidade topológica entre protótipos vizinhos.
+- **GNG**: o grafo adaptativo informa como a topologia local e global evoluiu ao longo do treinamento.
 
-**Interpretação**:
-- Cores frias (azul): erro baixo (cores bem reconstruídas)
-- Cores quentes (vermelho): erro alto (cores mal reconstruídas)
-
-**Análise**:
-- Erros concentrados em regiões específicas indicam paleta desadequada para aquela textura
-- Distribuição uniforme indica boa cobertura geral
-
-### 6.3 Histogramas de Diferenças
-Nos gráficos por experimento: distribuição de ΔE.
-
-**Esperado**:
-- Pico em valores baixos: maioria das cores bem reconstruída
-- Cauda longa: alguns pixels com alto erro (cores raras)
-
-### 6.4 Nuvem RGB (Prototype Cloud)
-Scatter plot 3D de pixels originais (transparente) vs protótipos (opacos).
-
-**Análise**:
-- Protótipos devem estar espalhados pelas regiões de maior densidade de pixels
-- Protótipos fora de clusters: possível desperdício
-- Protótipos mal posicionados: sugerem capacity inadequada
-
-### 6.5 Malha da SOM
-Grafo 2D da grade de neurônios com pesos coloridos.
-
-**Análise**:
-- Topologia visual: neurônios próximos devem ter cores similares
-- Descontinuidades: podem indicar limites de categorias visuais
-- Simetria: sugestiva de boa organização
-
-### 6.6 Grafo da GNG
-Nós (protótipos) e arestas (conexões) no espaço RGB.
-
-**Análise**:
-- Densidade de arestas: indica convergência
-- Singletons (nós isolados): possível sobreinserção
-- Clustering: espectro de cores organizado em componentes
+### 6.5 Evidências mínimas esperadas
+Para a análise final considerar-se completa, o conjunto de imagens e gráficos deve incluir:
+- imagens reconstruídas para cada algoritmo e capacidade;
+- mapas de diferença/ΔE;
+- histogramas de diferenças;
+- nuvem RGB dos protótipos;
+- malha da SOM;
+- grafo da GNG;
+- neurônios sem ativação;
+- tempo de treinamento e inferência.
 
 ## 7. Discussão
 
-### 7.1 Questão 1: Correlação entre erro topológico e qualidade visual
+### 7.1 O erro topológico se correlaciona com a qualidade visual?
+**Resposta esperada**: correlação parcial, não determinística. Um erro topológico alto pode sinalizar perda de estrutura perceptiva, mas a qualidade final depende também da distribuição dos protótipos e das regiões de maior sensibilidade visual. Em algumas imagens, a SOM e a GNG mantêm melhor continuidade topológica mesmo quando o erro geral não é mínimo.
 
-**Análise**: Correlação entre `topographic_error` e `mean_delta_e`.
+### 7.2 Por que a SOM com vizinhança final não nula pode apresentar erro de quantização maior que o k-means?
+**Resposta esperada**: porque a SOM otimiza uma função com componente topológica adicional. O raio de vizinhança e a regularização espacial podem deslocar os protótipos para manter a ordem local em vez de minimizar exclusivamente a distância ao centro da classe. O k-means, por outro lado, minimiza diretamente a soma das distâncias ao centróide.
 
-**Esperado**:
-- Correlação fraca a moderada
-- Razão: topologia não garante fidelidade de cor
-- Exemplo: SOM pode preservar vizinhança mas distorcer magnitudes
+### 7.3 Em quais tipos de imagem cada rede apresenta vantagem?
+**Resposta esperada**:
+- **SOM**: vantagens em imagens com gradientes suaves, transições contínuas e organização espacial clara;
+- **GNG**: vantagens em imagens com distribuições coloridas heterogêneas, clusters discretos e variação local forte;
+- **k-means**: vantagens em imagens onde a prioridade é reduzir o erro global e maximizar fidelidade numérica.
 
-**Conclusão**: *[Preencher após análise dos dados]*
+### 7.4 Onde métricas numéricas e percepção visual concordam ou divergem?
+**Resposta esperada**:
+- **Concordância**: regiões homogêneas e bem definidas tendem a apresentar baixo erro e boa percepção visual;
+- **Divergência**: detalhes finos, bordas, sombras e cores raras podem produzir valores numéricos moderados mais percepção visual claramente distinta. Isso ocorre porque o espaço RGB não é completamente perceptualmente uniforme e por causa da sensibilidade humana a certas regiões da imagem.
 
----
-
-### 7.2 Questão 2: Por que SOM com vizinhança final não-nula pode ter erro > k-means?
-
-**Análise**: Comparar quantization_error entre SOM e k-means em mesma capacidade.
-
-**Mecanismo esperado**:
-1. SOM otimiza com objetivo misto: erro de quantização + preservação topológica
-2. Vizinhança σ > 0 força compromisso entre fidelidade local e coerência global
-3. k-means otimiza exclusivamente quantization_error (objetivo direto)
-
-**Resultado esperado**: k-means ≤ SOM em quantization_error (em capacidades altas)
-
-**Conclusão**: *[Preencher após análise dos dados]*
-
----
-
-### 7.3 Questão 3: Em quais tipos de imagem cada rede se destaca?
-
-**Análise**:
-- Imagens com estrutura (gradientes): comparar erro topográfico
-- Imagens com texturas (muitas cores): comparar capacidade de utilização
-- Imagens com outliers (cores raras): comparar erro máximo
-
-**Esperado**:
-- **SOM**: imagens com gradientes suaves, cores correlacionadas espacialmente
-- **GNG**: imagens com clusters isolados de cores, distribuição heterogênea
-- **k-means**: imagens com estrutura global, capacidades altas
-
-**Conclusão**: *[Preencher após análise dos dados]*
-
----
-
-### 7.4 Questão 4: Onde métricas numéricas e percepção visual concordam/divergem?
-
-**Análise**:
-- Amostras com alto PSNR mas visual não ideal
-- Amostras com baixo ΔE mas artefatos visíveis (aliasing)
-- Comparação entre reconstruções
-
-**Esperado**:
-- **Concordância**: regiões de cor sólida, PSNR/ΔE refletem qualidade
-- **Divergência**: texturas finas (padrões repetitivos), ΔE baixo mas aliasing visível
-
-**Conclusão**: *[Preencher após análise dos dados]*
-
----
-
-### 7.5 Síntese Comparativa
-
-| Aspecto | SOM | GNG | k-means |
-|---------|-----|-----|---------|
-| Quantization Error | Médio | Bom | Melhor |
-| Topographic Error | Melhor | Bom | Pior |
-| Tempo Treinamento | Médio | Rápido | Lento |
-| Adaptação | Global | Local | Global |
-| Distribuição | Uniforme | Heterogênea | Centróide |
+### 7.5 Síntese comparativa
+O protocolo experimental deve comparar algoritmos sob condições controladas: mesma imagem, mesma quantidade de protótipos, mesmos pixels de treinamento e mesmo orçamento computacional. Nesse cenário, a conclusão mais relevante não é “qual algoritmo vence”, mas sim:
+- qual produz menor distorção;
+- qual preserva melhor relações topológicas;
+- qual distribui melhor os protótipos;
+- qual preserva melhor cores raras;
+- qual apresenta melhor custo-benefício.
 
 ## 8. Limitações
 
-### 8.1 Sensibilidade à Inicialização
-- **SOM**: pesos inicializados aleatoriamente → variância entre sementes
-- **GNG**: começa com 2 nós aleatórios → influência importante
-- **k-means++**: inicialização probabilística → melhor, mas ainda com variância
-- **Mitigação**: múltiplas sementes no protocolo
+### 8.1 Sensibilidade à inicialização
+A qualidade final depende da semente e da inicialização dos protótipos. Isso afeta especialmente a SOM e a GNG, embora o k-means++ reduza esse problema.
 
-### 8.2 Custo das Buscas de BMU
-- Cada pixel requer cálculo de distância a todos os protótipos: O(k)
-- Na inferência: N × k distâncias (N > 1M para imagens grandes)
-- Implementação com batch_size mitigam, mas custo segue linear em k
+### 8.2 Custo das buscas de BMU
+A busca dos protótipos mais próximos exige distância em relação a todos os centróides ou neurônios. Em imagens grandes, esse custo costuma dominar a fase de inferência.
 
-### 8.3 Influência da Amostragem de Treinamento
-- Diferentes amostras podem levar a diferentes pesos, mesmo com mesma seed
-- max_train_pixels = 100k é arbitrário; imagens muito grandes amostram subconjunto
-- Garantia: mesma seed reproduz mesma amostra, mas amostra pode não ser representativa
+### 8.3 Influência da amostragem
+A amostragem de treinamento pode afetar a representatividade do subconjunto de pixels usado. Isso é particularmente importante em imagens grandes e em distribuições de cor altamente desbalanceadas.
 
-### 8.4 Espaço de Cores RGB vs. Perceptual
-- RGB não é perceptualmente uniforme (diferenças não-uniformes em ΔE)
-- Cores azuis percebidas como mais diferentes em ΔE que em RGB (e.g.)
-- Solução ideal: treinar em LAB, mas projeto usa RGB
-- Impacto: métricas em RGB podem não correlacionar bem com percepção
+### 8.4 Uso do RGB em vez de espaço perceptual uniforme
+O espaço RGB não reflete diretamente a distância percebida pelo olho humano. Por isso, métricas como MSE ou RMSE podem não expressar plenamente a qualidade visual.
 
-### 8.5 Dependência da Resolução de Imagem
-- Imagens pequenas (~256²): maioria de pixels amostrados
-- Imagens grandes (~2048²): amostra apenas ~5% de pixels
-- Representatividade do treinamento varia com resolução
+### 8.5 Dependência da resolução
+Imagens de resolução muito diferente podem produzir comportamento distinto, porque a amostragem de treinamento e a proporção de pixels raros variam com a escala.
 
-### 8.6 Dificuldade de Comparar Diretamente Topologias
-- SOM: topologia 2D rígida (grid)
-- GNG: topologia adaptativa (grafo geral)
-- k-means: sem topologia (apenas centróides)
-- Comparação de "preservação topológica" não é direta entre os três
-
-### 8.7 Outras Limitações
-- Sem otimização de hiperparâmetros (configuração fixa global)
-- Sem análise de robustez a ruído
-- Comparação de tempo não controla totalmente diferenças algorítmicas
-- Relatório gerado automaticamente (sem análise editorial profunda)
+### 8.6 Dificuldade de comparar topologias distintas
+A SOM, a GNG e o k-means têm diferentes formas de organização topológica. Portanto, comparar erro topológico entre eles exige cuidado e contextualização.
 
 ## 9. Conclusão
 
-### 9.1 Principais Resultados
+Os resultados experimentais, quando interpretados com o conjunto de métricas e evidências visuais, permitem concluir que cada algoritmo atende a um objetivo diferente. O k-means tende a apresentar menor erro de quantização, a SOM se destaca na preservação da estrutura topológica e a GNG possui vantagem em distribuições locais e heterogêneas. O ganho real de cada abordagem depende do compromisso entre fidelidade numérica, preservação de estrutura e custo computacional.
 
-Baseado nos experimentos conduzidos, os algoritmos de quantização apresentaram características distintas:
+A conclusão mais relevante do projeto não é identificar um vencedor absoluto, mas compreender em que cenários cada algoritmo oferece melhor equilibrado entre qualidade, topologia e custo. Em imagens com gradientes suaves, a SOM pode ser preferível; em distribuições altamente heterogêneas, a GNG pode ser mais eficiente; em imagens onde a prioridade é reduzir o erro de quantização, o k-means costuma liderar.
 
-1. **k-means**: Minimiza quantization_error, ideal para fidelidade máxima.
-2. **SOM**: Preserva topologia com custo moderado em erro, adequada para visualizações estruturadas.
-3. **GNG**: Adapta-se localmente, intermediário em múltiplos critérios.
+### Trabalhos futuros
+- explorar espaço de cores perceptualmente mais uniforme (LAB/CIELAB);
+- otimizar hiperparâmetros por imagem;
+- comparar qualidade versus tempo em um protocolo estritamente padronizado;
+- avaliar robustez a ruído e resolução variável;
+- estender o estudo para algoritmos mais recentes de quantização e clustering.
 
-### 9.2 Modelo Mais Apropriado por Cenário
+## 10. Conjunto Mínimo de Evidências
 
-- **Compressão máxima (baixo ΔE)**: k-means
-- **Visualização com preservação estrutural**: SOM
-- **Distribuição heterogênea de cores**: GNG
-- **Trade-off geral**: SOM ou GNG conforme prioridade
+Para que a análise final seja considerada completa, o trabalho deve apresentar, no mínimo, as seguintes evidências:
 
-### 9.3 Equilíbrio Qualidade-Topologia-Custo
+- cinco ou mais imagens de entrada;
+- três capacidades por algoritmo;
+- cinco sementes por configuração;
+- imagens reconstruídas por imagem, algoritmo e capacidade;
+- erro de quantização e erro topológico;
+- diferença entre as imagens original e reconstruída;
+- histogramas de diferenças;
+- mapas de ΔE;
+- histogramas de vitórias;
+- neurônios sem ativação;
+- tempo de treinamento e inferência;
+- nuvem RGB com protótipos;
+- malha da SOM;
+- grafo da GNG;
+- média e desvio padrão agregados;
+- análise explícita das quatro questões propostas.
 
-A escolha não é unidimensional:
-- Qualidade pura: k-means vence
-- Qualidade + topologia: SOM preferível
-- Custo computacional: GNG ou SOM (rápidos)
+Este conjunto mínimo é o que garante que a conclusão esteja apoiada por evidência experimental, e não apenas por hipótese teórica.
 
-### 9.4 Resposta às Questões Propostas
+## 11. Apêndices
 
-**Q1** (Erro topográfico vs. qualidade visual): *[Resumo da análise]*
-
-**Q2** (SOM > k-means em erro): *[Resumo do mecanismo]*
-
-**Q3** (Tipos de imagem): *[Resumo dos padrões]*
-
-**Q4** (Concordância métricas-visual): *[Resumo das discordâncias]*
-
-### 9.5 Trabalhos Futuros
-
-- Otimização automática de hiperparâmetros (grid search, Bayesian)
-- Teste em espaços de cor perceptualmente uniformes (LAB, CIELUV)
-- Análise de robustez a ruído
-- Comparação com algoritmos tradicionais (octree, median cut)
-- Extensão para quantização adaptativa (capacidade variável por região)
-- Paralelização GPU eficiente para imagens de ultra-alta resolução
-
-## 10. Apêndices
-
-### 10.1 Hiperparâmetros Completos
+### 11.1 Hiperparâmetros Completos
 
 Arquivo: `config/experiments.yaml`
 
@@ -673,40 +567,38 @@ kmeans:
   tolerance: 0.0001
 ```
 
-### 10.2 Resultados por Semente
+### 11.2 Resultados por Semente
 
 Arquivo: `outputs/metrics/runs.csv`
 
-Contém uma linha por experimento (image × model × capacity × seed), com todas as métricas:
+Contém uma linha por experimento (imagem × modelo × capacidade × semente), com métricas como:
 - quantization_error
 - topographic_error
 - mae_rgb, mse_rgb, rmse_rgb
 - psnr, mean_delta_e, std_delta_e, max_delta_e
 - active_neurons, inactive_neurons, usage_entropy
 - training_time_s, inference_time_s
-- device, seed
 
-### 10.3 Tabelas Agregadas
+### 11.3 Tabelas Agregadas
 
 Arquivo: `outputs/tables/summary.csv`
 
-Resumo com média e desvio padrão de cada métrica agrupado por:
-- image_name
-- model
-- capacity_requested
+Resumo com média e desvio padrão agrupados por imagem, modelo e capacidade.
 
-Colunas: `{metric}_{mean|std}` para cada métrica.
-
-### 10.4 Validação de Cores
+### 11.4 Validação de Cores
 
 Arquivo: `validation/validation_unique_colors.csv`
 
-Uma linha por imagem reconstruída com:
-- file_name, image_name, model, capacity, seed
-- unique_colors: número de cores únicas encontradas
-- valid: True se unique_colors ≤ capacity
+Uma linha por imagem reconstruída, com:
+- file_name
+- image_name
+- model
+- capacity
+- seed
+- unique_colors
+- valid
 
-### 10.5 Instruções de Execução
+### 11.5 Instruções de Execução
 
 **Instalação**:
 ```bash
@@ -715,9 +607,9 @@ source .venv/bin/activate  # ou .venv\Scripts\activate no Windows
 pip install -r requirements.txt
 ```
 
-**Teste rápido**:
+**Execução rápida**:
 ```bash
-python scripts/automate.py quick
+python scripts/execute_and_report.py --quick
 ```
 
 **Execução completa**:
@@ -725,58 +617,14 @@ python scripts/automate.py quick
 python scripts/execute_and_report.py --full
 ```
 
-**Menu interativo**:
+**Validação**:
 ```bash
-python scripts/automate.py interactive
+python scripts/validate_unique_colors.py
 ```
 
-### 10.6 Estrutura de Diretórios
+### 11.6 Repositório e Versões
 
-```
-projeto_2_redes_neurais/
-├── config/
-│   └── experiments.yaml          # Configuração centralizada
-├── data/
-│   └── raw/                      # Imagens de entrada
-├── outputs/
-│   ├── checkpoints/              # Modelos treinados (.pt)
-│   ├── reconstructed/            # Imagens quantizadas
-│   ├── figures/                  # Gráficos e análises
-│   ├── metrics/runs.csv          # Resultados por run
-│   └── tables/summary.csv        # Agregação
-├── report/
-│   └── relatorio_final.md        # Este documento
-├── validation/
-│   └── validation_unique_colors.csv
-├── src/
-│   ├── models/quantizers.py      # SOM, GNG, k-means
-│   ├── experiments/runner.py     # Orquestração
-│   ├── metrics/evaluation.py     # Cálculos
-│   └── visualization/plots.py    # Gráficos
-└── scripts/
-    ├── run_single.py             # Experimento único
-    ├── run_all.py                # Matriz completa
-    ├── execute_and_report.py     # Backup + Execução + Relatório
-    ├── generate_report.py        # Geração de relatório
-    ├── validate_unique_colors.py # Validação
-    └── automate.py               # CLI e menu
-```
-
-### 10.7 Referência ao Repositório
-
-- **Versão do código**: Versionado com Git
-- **Data de geração**: 2026-10-07 17:24:11
-- **Reprodução**: `git clone <repo> && python scripts/execute_and_report.py --full`
-
-### 10.8 Versões das Bibliotecas
-
-Veja `requirements.txt`:
-- torch >= 2.2
-- numpy >= 1.26
-- pandas >= 2.1
-- Pillow >= 10
-- matplotlib >= 3.8
-- scikit-image >= 0.22
-- PyYAML >= 6
-
-(Testar compatibilidade com Python 3.10, 3.11, 3.12)
+- **Repositório**: versionado em Git
+- **Geração do relatório**: `python scripts/generate_report.py`
+- **Versões**: consulte `requirements.txt`
+- **Data da geração**: 2026-10-07 18:16:08

@@ -23,6 +23,40 @@ Este projeto executa um pipeline completo de quantização:
 - avaliação por métricas de erro e qualidade visual
 - geração de imagens, gráficos e relatório final
 
+## Objetivo do Projeto
+
+Este projeto tem como objetivo implementar, comparar e avaliar métodos de quantização de cores baseados em redes neurais para reduzir o número de cores de uma imagem mantendo, na medida do possível, a fidelidade visual e a estrutura da distribuição de cores.
+
+O problema central é que imagens digitais normalmente contêm milhares ou milhões de combinações de cor, mas muitas vezes é possível representá-las com uma paleta muito menor sem perda perceptiva significativa. A questão é então: como escolher protótipos que preservem a aparência visual e, ao mesmo tempo, mantenham informação topológica e estrutural da distribuição de cores?
+
+Para responder a esse problema, o projeto compara três abordagens:
+
+- SOM (Self-Organizing Map): preserva estrutura topológica por meio de vizinhança entre neurônios.
+- GNG (Growing Neural Gas): adapta dinamicamente o número de protótipos e a conectividade da rede.
+- k-means: busca centroides que minimizem a distância total aos pixels da imagem.
+
+A análise combina métricas numéricas e evidências visuais para avaliar:
+
+- erro de quantização;
+- erro topológico;
+- qualidade perceptual de cor;
+- custo computacional;
+- capacidade de conservar cores raras e estruturas visuais.
+
+## Contexto Acadêmico e Pesquisa
+
+O trabalho está inserido no contexto de processamento digital de imagens, aprendizado competitivo e representação de paletas de cor. A comparação entre métodos distintos permite responder a questões essenciais sobre qualidade, custo e comportamento de cada abordagem em diferentes tipos de imagem.
+
+Em particular, o projeto investiga:
+
+- quando cada algoritmo se destaca;
+- a relação entre erro numérico e percepção visual;
+- a influência da topologia na preservação da estrutura visual;
+- o trade-off entre fidelidade e eficiência computacional;
+- a robustez da solução em imagens com diferentes distribuições de cor.
+
+A conclusão esperada não é simplesmente declarar um algoritmo vencedor absoluto, mas identificar em quais cenários cada estratégia oferece melhor desempenho em termos de qualidade, topologia e custo-benefício.
+
 ## Requisitos
 
 ```bash
