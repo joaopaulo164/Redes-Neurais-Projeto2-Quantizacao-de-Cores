@@ -315,3 +315,10 @@ runs/
 outputs/output_figures.pdf
 outputs/output_reconstructed.pdf
 outputs/
+
+# ------------------------------------------------------------
+# Backups de execução
+# ------------------------------------------------------------
+
+outputs_execucao_*/
+validation_execucao_*/

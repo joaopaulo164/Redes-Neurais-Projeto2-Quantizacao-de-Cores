@@ -1,0 +1,34 @@
+
+╔════════════════════════════════════════════════════════════════╗
+║           RESUMO DA EXECUÇÃO - 20261007_162102            ║
+╚════════════════════════════════════════════════════════════════╝
+
+📊 ESTATÍSTICAS GERADAS:
+  • Imagens reconstruídas: 18
+  • Figuras de análise: 72
+  • Checkpoints salvos: 18
+  • Pasta de backup: outputs_execucao_20261007_162102/
+
+📂 ARQUIVOS PRINCIPAIS:
+  • Métricas: outputs/metrics/runs.csv
+  • Resumo: outputs/tables/summary.csv
+  • Validação: validation/validation_unique_colors.csv
+  • Relatório: report/relatorio_final.md
+
+🔗 LINKS ÚTEIS:
+  • Abrir relatório: report/relatorio_final.md
+  • Ver imagens: outputs/reconstructed/
+  • Ver figuras: outputs/figures/
+  • Ver métricas: outputs/tables/summary.csv
+
+⏱️  TIMESTAMP: 20261007_162102
+🖥️  Projeto raiz: C:\Projetos\projeto_2_redes_neurais
+
+Para comparar com execução anterior:
+  • Backup salvo em: C:\Projetos\projeto_2_redes_neurais/outputs_execucao_20261007_162102
+  • Compare com: outputs/
+
+Para reexecutar:
+  python scripts/execute_and_report.py --full
+  ou
+  python scripts/automate.py pipeline
