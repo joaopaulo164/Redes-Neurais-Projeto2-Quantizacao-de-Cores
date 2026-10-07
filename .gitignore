@@ -306,3 +306,5 @@ runs/
 *.tgz
 *.7z
 *.rar
+outputs/output_figures.pdf
+outputs/output_reconstructed.pdf
