@@ -306,28 +306,28 @@ Esta seção reúne as evidências de que cada algoritmo funciona corretamente e
 
 ### 4.1 Status de Validação por Regressão
 
-A validação foi executada em `validation\validation_unique_colors.csv`. O conjunto contém 18 reconstruções avaliadas.
+A validação foi executada em `validation\validation_unique_colors.csv`. O conjunto contém 270 reconstruções avaliadas.
 
 | Indicador | Valor |
 |-----------|-------|
-| Reconstruções válidas | 18 |
+| Reconstruções válidas | 270 |
 | Reconstruções inválidas | 0 |
-| Máximo de cores únicas | 16 |
-| Mínimo de cores únicas | 12 |
+| Máximo de cores únicas | 256 |
+| Mínimo de cores únicas | 14 |
 
 ```markdown
-| file_name                              | model   |   capacity |   seed |   unique_colors | valid   |
-|:---------------------------------------|:--------|-----------:|-------:|----------------:|:--------|
-| 00_controle_16_cores_gng_16_s13.png    | gng     |         16 |     13 |              12 | True    |
-| 00_controle_16_cores_kmeans_16_s13.png | kmeans  |         16 |     13 |              16 | True    |
-| 00_controle_16_cores_som_16_s13.png    | som     |         16 |     13 |              15 | True    |
-| 01_poucas_cores_gng_16_s13.png         | gng     |         16 |     13 |              12 | True    |
-| 01_poucas_cores_kmeans_16_s13.png      | kmeans  |         16 |     13 |              16 | True    |
-| 01_poucas_cores_som_16_s13.png         | som     |         16 |     13 |              16 | True    |
-| 02_gradiente_suave_gng_16_s13.png      | gng     |         16 |     13 |              12 | True    |
-| 02_gradiente_suave_kmeans_16_s13.png   | kmeans  |         16 |     13 |              16 | True    |
-| 02_gradiente_suave_som_16_s13.png      | som     |         16 |     13 |              16 | True    |
-| 03_alta_saturacao_gng_16_s13.png       | gng     |         16 |     13 |              12 | True    |
+| file_name                             | model   |   capacity |   seed |   unique_colors | valid   |
+|:--------------------------------------|:--------|-----------:|-------:|----------------:|:--------|
+| 00_controle_16_cores_gng_16_s101.png  | gng     |         16 |    101 |              16 | True    |
+| 00_controle_16_cores_gng_16_s13.png   | gng     |         16 |     13 |              15 | True    |
+| 00_controle_16_cores_gng_16_s137.png  | gng     |         16 |    137 |              16 | True    |
+| 00_controle_16_cores_gng_16_s37.png   | gng     |         16 |     37 |              16 | True    |
+| 00_controle_16_cores_gng_16_s73.png   | gng     |         16 |     73 |              15 | True    |
+| 00_controle_16_cores_gng_256_s101.png | gng     |        256 |    101 |             175 | True    |
+| 00_controle_16_cores_gng_256_s13.png  | gng     |        256 |     13 |             163 | True    |
+| 00_controle_16_cores_gng_256_s137.png | gng     |        256 |    137 |             172 | True    |
+| 00_controle_16_cores_gng_256_s37.png  | gng     |        256 |     37 |             159 | True    |
+| 00_controle_16_cores_gng_256_s73.png  | gng     |        256 |     73 |             160 | True    |
 ```
 
 **Interpretação**: a maior parte das reconstruções respeita o limite de cores. Caso existam registros inválidos, estes devem ser revisados antes da interpretação final.
@@ -359,24 +359,60 @@ A tabela a seguir agrega as métricas de desempenho por imagem, modelo e capacid
 
 | image_name               | model   |   capacity_requested |   quantization_error_mean |   quantization_error_std |   topographic_error_mean |   topographic_error_std |   psnr_mean |   psnr_std |   mean_delta_e_mean |   mean_delta_e_std |   training_time_s_mean |   training_time_s_std |
 |:-------------------------|:--------|---------------------:|--------------------------:|-------------------------:|-------------------------:|------------------------:|------------:|-----------:|--------------------:|-------------------:|-----------------------:|----------------------:|
-| 00_controle_16_cores.png | gng     |                   16 |                    0.197  |                      nan |                   0.1    |                     nan |     18.1541 |        nan |             12.1823 |                nan |                 0.3414 |                   nan |
-| 00_controle_16_cores.png | kmeans  |                   16 |                    0.0079 |                      nan |                 nan      |                     nan |     42.3464 |        nan |              0.5369 |                nan |                 0.0488 |                   nan |
-| 00_controle_16_cores.png | som     |                   16 |                    0.2153 |                      nan |                   0.0003 |                     nan |     17.0575 |        nan |             14.6067 |                nan |                 0.09   |                   nan |
-| 01_poucas_cores.png      | gng     |                   16 |                    0.0417 |                      nan |                   0.0016 |                     nan |     28.1969 |        nan |              2.8943 |                nan |                 0.4525 |                   nan |
-| 01_poucas_cores.png      | kmeans  |                   16 |                    0.0165 |                      nan |                 nan      |                     nan |     35.6572 |        nan |              1.1312 |                nan |                 0.0923 |                   nan |
-| 01_poucas_cores.png      | som     |                   16 |                    0.0405 |                      nan |                   0.0137 |                     nan |     27.6    |        nan |              2.8513 |                nan |                 0.2834 |                   nan |
-| 02_gradiente_suave.png   | gng     |                   16 |                    0.0868 |                      nan |                   0.0174 |                     nan |     25.0163 |        nan |              5.6036 |                nan |                 0.429  |                   nan |
-| 02_gradiente_suave.png   | kmeans  |                   16 |                    0.0588 |                      nan |                 nan      |                     nan |     28.382  |        nan |              3.8531 |                nan |                 0.0975 |                   nan |
-| 02_gradiente_suave.png   | som     |                   16 |                    0.0843 |                      nan |                   0.1578 |                     nan |     25.4528 |        nan |              5.3006 |                nan |                 0.0803 |                   nan |
-| 03_alta_saturacao.png    | gng     |                   16 |                    0.1608 |                      nan |                   0.0054 |                     nan |     19.4942 |        nan |             10.5021 |                nan |                 0.3631 |                   nan |
-| 03_alta_saturacao.png    | kmeans  |                   16 |                    0.1145 |                      nan |                 nan      |                     nan |     22.2572 |        nan |              7.2434 |                nan |                 0.091  |                   nan |
-| 03_alta_saturacao.png    | som     |                   16 |                    0.1726 |                      nan |                   0.0878 |                     nan |     18.4565 |        nan |             11.7345 |                nan |                 0.071  |                   nan |
-| 04_cor_rara.png          | gng     |                   16 |                    0.0577 |                      nan |                   0.0017 |                     nan |     26.2188 |        nan |              3.676  |                nan |                 0.3548 |                   nan |
-| 04_cor_rara.png          | kmeans  |                   16 |                    0.0461 |                      nan |                 nan      |                     nan |     30.1435 |        nan |              2.8645 |                nan |                 0.1004 |                   nan |
-| 04_cor_rara.png          | som     |                   16 |                    0.0527 |                      nan |                   0.2144 |                     nan |     26.1897 |        nan |              3.3473 |                nan |                 0.1041 |                   nan |
-| 05_cena_complexa.png     | gng     |                   16 |                    0.1084 |                      nan |                   0.0664 |                     nan |     22.9697 |        nan |              8.3359 |                nan |                 0.3517 |                   nan |
-| 05_cena_complexa.png     | kmeans  |                   16 |                    0.0877 |                      nan |                 nan      |                     nan |     25.0383 |        nan |              6.771  |                nan |                 0.087  |                   nan |
-| 05_cena_complexa.png     | som     |                   16 |                    0.1065 |                      nan |                   0.2103 |                     nan |     22.8277 |        nan |              8.2828 |                nan |                 0.0713 |                   nan |
+| 00_controle_16_cores.png | gng     |                   16 |                    0.0239 |                   0.0121 |                   0.0008 |                  0.0005 |     33.3012 |     7.3601 |              1.6771 |             1.0607 |                48.1849 |                5.6791 |
+| 00_controle_16_cores.png | gng     |                   64 |                    0.0065 |                   0.0002 |                   0.0007 |                  0.0004 |     45.3696 |     0.3664 |              0.4584 |             0.0128 |                53.3961 |                4.0671 |
+| 00_controle_16_cores.png | gng     |                  256 |                    0.0041 |                   0.0001 |                   0.0031 |                  0.0008 |     50.3057 |     0.2246 |              0.2991 |             0.0095 |                64.5079 |                0.6916 |
+| 00_controle_16_cores.png | kmeans  |                   16 |                    0.0079 |                   0      |                 nan      |                nan      |     42.3517 |     0.0001 |              0.5366 |             0.0005 |                 0.8031 |                0.2682 |
+| 00_controle_16_cores.png | kmeans  |                   64 |                    0.0055 |                   0.0001 |                 nan      |                nan      |     47.2289 |     0.1409 |              0.4051 |             0.0131 |                 6.8837 |                0.798  |
+| 00_controle_16_cores.png | kmeans  |                  256 |                    0.0031 |                   0      |                 nan      |                nan      |     53.0412 |     0.098  |              0.2247 |             0.005  |                36.117  |                1.8117 |
+| 00_controle_16_cores.png | som     |                   16 |                    0.1575 |                   0.0034 |                   0.07   |                  0.0128 |     20.2007 |     0.1213 |             11.748  |             0.3504 |                12.2677 |                4.1366 |
+| 00_controle_16_cores.png | som     |                   64 |                    0.0129 |                   0.0051 |                   0.0101 |                  0.0093 |     39.2714 |     3.5432 |              0.8104 |             0.2955 |                18.7294 |                4.6239 |
+| 00_controle_16_cores.png | som     |                  256 |                    0.0041 |                   0.0001 |                   0.1727 |                  0.0242 |     46.858  |     0.1416 |              0.2767 |             0.0036 |                48.9077 |                3.9795 |
+| 01_poucas_cores.png      | gng     |                   16 |                    0.0204 |                   0.0026 |                   0.001  |                  0.0004 |     34.0509 |     0.8668 |              1.3962 |             0.1399 |                47.5173 |                1.8288 |
+| 01_poucas_cores.png      | gng     |                   64 |                    0.0101 |                   0.0001 |                   0.003  |                  0.0009 |     40.7355 |     0.104  |              0.7378 |             0.0077 |                53.1077 |                0.7679 |
+| 01_poucas_cores.png      | gng     |                  256 |                    0.0071 |                   0.0002 |                   0.0059 |                  0.0024 |     44.2455 |     0.2288 |              0.5381 |             0.0098 |                68.7721 |                0.8903 |
+| 01_poucas_cores.png      | kmeans  |                   16 |                    0.0158 |                   0.0005 |                 nan      |                nan      |     35.7159 |     0.302  |              1.0731 |             0.0267 |                 2.3551 |                1.0696 |
+| 01_poucas_cores.png      | kmeans  |                   64 |                    0.0098 |                   0.0002 |                 nan      |                nan      |     41.4598 |     0.0896 |              0.7068 |             0.0117 |                 9.6575 |                0.7799 |
+| 01_poucas_cores.png      | kmeans  |                  256 |                    0.0058 |                   0.0001 |                 nan      |                nan      |     46.6924 |     0.0377 |              0.4362 |             0.0026 |                46.6432 |                6.8246 |
+| 01_poucas_cores.png      | som     |                   16 |                    0.0311 |                   0.0001 |                   0.0517 |                  0.0029 |     30.5981 |     0.0628 |              2.2002 |             0.0113 |                 8.3513 |                0.3432 |
+| 01_poucas_cores.png      | som     |                   64 |                    0.0112 |                   0.0001 |                   0.1337 |                  0.0078 |     38.1762 |     0.1465 |              0.8472 |             0.0206 |                15.4807 |                0.6678 |
+| 01_poucas_cores.png      | som     |                  256 |                    0.0068 |                   0.0001 |                   0.2094 |                  0.018  |     41.4887 |     0.058  |              0.5594 |             0.0058 |                44.7851 |                0.259  |
+| 02_gradiente_suave.png   | gng     |                   16 |                    0.0583 |                   0.0012 |                   0.0012 |                  0.0015 |     28.3693 |     0.0674 |              3.8507 |             0.1353 |                47.1038 |                1.378  |
+| 02_gradiente_suave.png   | gng     |                   64 |                    0.0242 |                   0.0007 |                   0.001  |                  0.0005 |     35.8888 |     0.1819 |              1.5795 |             0.0432 |                68.0598 |               15.625  |
+| 02_gradiente_suave.png   | gng     |                  256 |                    0.0133 |                   0.0001 |                   0.0024 |                  0.0005 |     41.1692 |     0.0484 |              0.9337 |             0.0042 |                72.2474 |                0.834  |
+| 02_gradiente_suave.png   | kmeans  |                   16 |                    0.0567 |                   0.0016 |                 nan      |                nan      |     28.434  |     0.1217 |              3.6662 |             0.1354 |                 5.1909 |                1.3974 |
+| 02_gradiente_suave.png   | kmeans  |                   64 |                    0.023  |                   0.0002 |                 nan      |                nan      |     36.2582 |     0.0646 |              1.5026 |             0.023  |                15.4454 |                3.0177 |
+| 02_gradiente_suave.png   | kmeans  |                  256 |                    0.012  |                   0      |                 nan      |                nan      |     42.0233 |     0.025  |              0.8619 |             0.0024 |                50.2841 |                5.1274 |
+| 02_gradiente_suave.png   | som     |                   16 |                    0.0723 |                   0.0001 |                   0.0817 |                  0.0014 |     26.4733 |     0.0137 |              4.874  |             0.0366 |                 8.1231 |                0.3063 |
+| 02_gradiente_suave.png   | som     |                   64 |                    0.0278 |                   0.0001 |                   0.183  |                  0.002  |     34.4504 |     0.0461 |              1.8252 |             0.0136 |                15.4659 |                0.4663 |
+| 02_gradiente_suave.png   | som     |                  256 |                    0.0138 |                   0.0001 |                   0.2722 |                  0.0063 |     40.1211 |     0.0575 |              0.97   |             0.0027 |                46.7086 |                5.1477 |
+| 03_alta_saturacao.png    | gng     |                   16 |                    0.1137 |                   0.0019 |                   0.0053 |                  0.0042 |     22.1842 |     0.1075 |              7.3374 |             0.2422 |                34.5704 |                0.6146 |
+| 03_alta_saturacao.png    | gng     |                   64 |                    0.0535 |                   0.0011 |                   0.0042 |                  0.0014 |     28.7498 |     0.1684 |              3.4569 |             0.0956 |                39.3836 |                0.7748 |
+| 03_alta_saturacao.png    | gng     |                  256 |                    0.0308 |                   0.0002 |                   0.0053 |                  0.0012 |     33.579  |     0.0324 |              1.9756 |             0.0197 |                53.3375 |                0.7766 |
+| 03_alta_saturacao.png    | kmeans  |                   16 |                    0.1108 |                   0.0015 |                 nan      |                nan      |     22.3235 |     0.0688 |              6.9919 |             0.1358 |                 2.3929 |                0.6044 |
+| 03_alta_saturacao.png    | kmeans  |                   64 |                    0.0506 |                   0.0003 |                 nan      |                nan      |     29.1884 |     0.0672 |              3.2516 |             0.017  |                14.0859 |                1.1319 |
+| 03_alta_saturacao.png    | kmeans  |                  256 |                    0.0278 |                   0.0002 |                 nan      |                nan      |     34.4848 |     0.0251 |              1.7587 |             0.023  |                58.9484 |                2.4323 |
+| 03_alta_saturacao.png    | som     |                   16 |                    0.1369 |                   0.0032 |                   0.1579 |                  0.0803 |     20.6185 |     0.2074 |              9.1732 |             0.2608 |                 5.7306 |                0.3672 |
+| 03_alta_saturacao.png    | som     |                   64 |                    0.0621 |                   0.0001 |                   0.2071 |                  0.0143 |     26.5665 |     0.0325 |              3.7729 |             0.0278 |                10.6267 |                0.9437 |
+| 03_alta_saturacao.png    | som     |                  256 |                    0.0324 |                   0.0002 |                   0.2195 |                  0.0229 |     32.0213 |     0.1983 |              2.0407 |             0.0102 |                31.1332 |                0.6033 |
+| 04_cor_rara.png          | gng     |                   16 |                    0.0441 |                   0.0003 |                   0.003  |                  0.0019 |     30.0397 |     0.0348 |              2.7945 |             0.0319 |                35.2437 |                0.7443 |
+| 04_cor_rara.png          | gng     |                   64 |                    0.0272 |                   0.0006 |                   0.002  |                  0.0008 |     34.7301 |     0.1307 |              1.7007 |             0.0514 |                41.9206 |                4.2049 |
+| 04_cor_rara.png          | gng     |                  256 |                    0.0182 |                   0.0003 |                   0.0051 |                  0.0014 |     38.1501 |     0.1306 |              1.1275 |             0.0136 |                51.8294 |                0.3751 |
+| 04_cor_rara.png          | kmeans  |                   16 |                    0.0438 |                   0.0006 |                 nan      |                nan      |     30.4846 |     0.048  |              2.7875 |             0.0424 |                 5.5945 |                1.9462 |
+| 04_cor_rara.png          | kmeans  |                   64 |                    0.0241 |                   0.0003 |                 nan      |                nan      |     35.7594 |     0.0604 |              1.4994 |             0.0304 |                13.9542 |                1.1686 |
+| 04_cor_rara.png          | kmeans  |                  256 |                    0.0146 |                   0.0001 |                 nan      |                nan      |     40.1268 |     0.0267 |              0.8923 |             0.0085 |                56.8528 |                6.1339 |
+| 04_cor_rara.png          | som     |                   16 |                    0.0476 |                   0.0003 |                   0.4098 |                  0.1449 |     27.05   |     0.08   |              3.0751 |             0.0365 |                 5.5744 |                0.1535 |
+| 04_cor_rara.png          | som     |                   64 |                    0.0269 |                   0.0003 |                   0.405  |                  0.0909 |     31.9148 |     0.3026 |              1.6706 |             0.033  |                10.5273 |                0.1825 |
+| 04_cor_rara.png          | som     |                  256 |                    0.0166 |                   0.0001 |                   0.416  |                  0.0505 |     35.9792 |     0.3499 |              1.0276 |             0.0053 |                31.1202 |                0.4835 |
+| 05_cena_complexa.png     | gng     |                   16 |                    0.0867 |                   0.0005 |                   0.0003 |                  0.0002 |     25.0543 |     0.0464 |              6.8415 |             0.0937 |                34.7799 |                0.7513 |
+| 05_cena_complexa.png     | gng     |                   64 |                    0.0478 |                   0.0005 |                   0.0025 |                  0.0009 |     30.2943 |     0.0601 |              4.4063 |             0.0931 |                40.1543 |                0.624  |
+| 05_cena_complexa.png     | gng     |                  256 |                    0.0298 |                   0.0003 |                   0.0064 |                  0.0007 |     34.3592 |     0.0859 |              2.9231 |             0.0295 |                59.1534 |                1.4364 |
+| 05_cena_complexa.png     | kmeans  |                   16 |                    0.0858 |                   0.0009 |                 nan      |                nan      |     25.1936 |     0.0811 |              6.743  |             0.0383 |                 4.5161 |                0.7065 |
+| 05_cena_complexa.png     | kmeans  |                   64 |                    0.0463 |                   0.0003 |                 nan      |                nan      |     30.4916 |     0.0193 |              4.2745 |             0.1148 |                14.9581 |                0.4514 |
+| 05_cena_complexa.png     | kmeans  |                  256 |                    0.0267 |                   0.0001 |                 nan      |                nan      |     35.1301 |     0.0103 |              2.6012 |             0.0115 |                63.0898 |                3.6672 |
+| 05_cena_complexa.png     | som     |                   16 |                    0.0929 |                   0.0001 |                   0.205  |                  0.004  |     24.1998 |     0.0108 |              7.393  |             0.0157 |                 5.7963 |                0.1918 |
+| 05_cena_complexa.png     | som     |                   64 |                    0.0504 |                   0.0001 |                   0.1874 |                  0.0046 |     29.5252 |     0.0151 |              4.8415 |             0.0185 |                10.3834 |                0.2351 |
+| 05_cena_complexa.png     | som     |                  256 |                    0.0296 |                   0      |                   0.2047 |                  0.0038 |     33.7752 |     0.0267 |              3.2302 |             0.0091 |                31.2211 |                0.3492 |
 
 ### 5.1 Erro de Quantização
 **Definição**: erro médio quadrático entre pixels originais e seus protótipos atribuídos.
@@ -627,4 +663,4 @@ python scripts/validate_unique_colors.py
 - **Repositório**: versionado em Git
 - **Geração do relatório**: `python scripts/generate_report.py`
 - **Versões**: consulte `requirements.txt`
-- **Data da geração**: 2026-10-07 18:16:08
+- **Data da geração**: 2026-10-07 21:50:45

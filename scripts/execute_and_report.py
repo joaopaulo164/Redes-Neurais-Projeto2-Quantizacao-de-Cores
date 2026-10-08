@@ -43,7 +43,7 @@ class ProjectExecution:
 
     def backup_outputs(self):
         """Faz backup das pastas outputs e validation com timestamp."""
-        self.print_step(1, "Fazendo backup dos outputs e validation", 6)
+        self.print_step(1, "Fazendo backup dos outputs e validation", 7)
 
         ok = True
 
@@ -77,7 +77,7 @@ class ProjectExecution:
 
     def clean_outputs(self):
         """Limpa as pastas de saída mantendo a estrutura e .gitkeep."""
-        self.print_step(2, "Limpando pastas de saída", 6)
+        self.print_step(2, "Limpando pastas de saída", 7)
 
         dirs_to_clean = [
             self.outputs_dir / "checkpoints",
@@ -117,7 +117,7 @@ class ProjectExecution:
     def run_experiments(self, config="config/experiments.yaml", quick=False):
         """Executa os experimentos."""
         step = 3 if not quick else 2.5
-        self.print_step(step, "Executando experimentos", 6)
+        self.print_step(step, "Executando experimentos", 7)
 
         if quick:
             config = "config/experiments - teste rapido.yaml"
@@ -145,7 +145,7 @@ class ProjectExecution:
 
     def generate_evidences(self):
         """Gera as evidências (validação, figuras, etc)."""
-        self.print_step(4, "Gerando validações e evidências", 6)
+        self.print_step(4, "Gerando validações e evidências", 7)
 
         scripts = [
             ("scripts/validate_unique_colors.py", "Validando cores únicas"),
@@ -172,9 +172,48 @@ class ProjectExecution:
 
         return True
 
+    def export_checkpoints(self):
+        """Exporta os checkpoints em formatos auditáveis."""
+        self.print_step(5, "Exportando checkpoints para formatos auditáveis", 7)
+
+        script_path = self.root / "scripts/export_current_checkpoints.py"
+        if not script_path.exists():
+            print(f"  ⚠️  Script export_current_checkpoints.py não encontrado")
+            return True  # Não interrompe pipeline
+
+        print(f"  📦 Exportando checkpoints em CSV/TXT/JSON...")
+        try:
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(script_path),
+                    "--input-dir",
+                    "outputs/checkpoints",
+                    "--output-dir",
+                    "validation",
+                    "--format",
+                    "all",
+                    "--history-mode",
+                    "summary",
+                    "--overwrite",
+                ],
+                cwd=self.root,
+                check=False,
+            )
+            
+            if result.returncode == 0:
+                print(f"  ✅ Checkpoints exportados com sucesso!")
+                return True
+            else:
+                print(f"  ⚠️  Exportação de checkpoints com avisos")
+                return True
+        except Exception as e:
+            print(f"  ⚠️  Erro ao exportar checkpoints: {e}")
+            return True  # Não interrompe pipeline
+
     def generate_report(self):
         """Gera o relatório estruturado."""
-        self.print_step(5, "Gerando relatório estruturado", 6)
+        self.print_step(6, "Gerando relatório estruturado", 7)
 
         script_path = self.root / "scripts/generate_report.py"
         if not script_path.exists():
@@ -204,7 +243,7 @@ class ProjectExecution:
 
     def create_summary(self):
         """Cria um resumo da execução."""
-        self.print_step(6, "Criando resumo da execução", 6)
+        self.print_step(7, "Criando resumo da execução", 7)
 
         summary_file = self.root / "EXECUCAO_RESUMO.txt"
         
@@ -252,8 +291,13 @@ Para reexecutar:
 """
 
         try:
-            with open(summary_file, "w", encoding="utf-8") as f:
-                f.write(summary)
+            if summary_file.exists():
+                with open(summary_file, "a", encoding="utf-8") as f:
+                    f.write("\n\n" + "─" * 64 + "\n\n")
+                    f.write(summary)
+            else:
+                with open(summary_file, "w", encoding="utf-8") as f:
+                    f.write(summary)
             print(f"  📋 Resumo salvo em: {summary_file.name}")
             print(summary)
             return True
@@ -273,6 +317,7 @@ Para reexecutar:
             ("Limpeza", self.clean_outputs),
             ("Experimentos", lambda: self.run_experiments(config, quick)),
             ("Evidências", self.generate_evidences),
+            ("Checkpoints", self.export_checkpoints),
             ("Relatório", self.generate_report),
             ("Resumo", self.create_summary),
         ]

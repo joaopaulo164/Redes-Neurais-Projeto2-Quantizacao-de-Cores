@@ -101,6 +101,19 @@ class ProjectAutomation:
             description="Validando cores únicas"
         )
 
+    def export_checkpoints(self):
+        """Exporta checkpoints para formatos auditáveis."""
+        return self.run_command(
+            sys.executable,
+            "scripts/export_current_checkpoints.py",
+            "--input-dir", "outputs/checkpoints",
+            "--output-dir", "validation",
+            "--format", "all",
+            "--history-mode", "summary",
+            "--overwrite",
+            description="Exportando checkpoints"
+        )
+
     def run_execute_and_report(self):
         """Executa o pipeline completo com backup e relatório."""
         return self.run_command(
@@ -144,6 +157,7 @@ class ProjectAutomation:
             ("Executar matriz completa", self.full_matrix),
             ("Gerar relatório", self.generate_report),
             ("Validar cores únicas", self.validate_colors),
+            ("Exportar checkpoints", self.export_checkpoints),
         ]
         
         start_time = time.time()
@@ -182,10 +196,11 @@ class ProjectAutomation:
             print("8️⃣  Limpar outputs")
             print("9️⃣  Pipeline completo (install → test → run → report)")
             print("🔟 Pipeline com backup (backup → limpeza → full → report)")
+            print("1️⃣1️⃣ Exportar checkpoints")
             print("0️⃣  Sair")
             print(f"{'=' * 60}\n")
             
-            choice = input("Escolha uma opção (0-10): ").strip()
+            choice = input("Escolha uma opção (0-11): ").strip()
             
             if choice == "0":
                 print("\n👋 Até logo!")
@@ -210,6 +225,8 @@ class ProjectAutomation:
                 self.full_pipeline()
             elif choice == "10":
                 self.run_execute_and_report()
+            elif choice == "11":
+                self.export_checkpoints()
             else:
                 print("❌ Opção inválida!")
 
@@ -226,6 +243,7 @@ Exemplos de uso:
   python scripts/automate.py full              # Matriz completa
   python scripts/automate.py quick             # Teste rápido
   python scripts/automate.py report            # Gerar relatório
+    python scripts/automate.py export            # Exportar checkpoints
   python scripts/automate.py pipeline          # Pipeline completo
   python scripts/automate.py clean             # Limpar outputs
   python scripts/automate.py interactive       # Menu interativo (padrão)
@@ -241,6 +259,7 @@ Exemplos de uso:
     subparsers.add_parser("quick", help="Teste rápido")
     subparsers.add_parser("report", help="Gerar relatório")
     subparsers.add_parser("validate", help="Validar cores")
+    subparsers.add_parser("export", help="Exportar checkpoints")
     subparsers.add_parser("clean", help="Limpar outputs")
     subparsers.add_parser("pipeline", help="Pipeline completo")
     subparsers.add_parser("interactive", help="Menu interativo")
@@ -262,6 +281,8 @@ Exemplos de uso:
         automation.generate_report()
     elif args.command == "validate":
         automation.validate_colors()
+    elif args.command == "export":
+        automation.export_checkpoints()
     elif args.command == "clean":
         automation.clean_outputs()
     elif args.command == "pipeline":

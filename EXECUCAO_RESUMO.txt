@@ -1,13 +1,14 @@
 
 ╔════════════════════════════════════════════════════════════════╗
-║           RESUMO DA EXECUÇÃO - 20261007_172255            ║
+║           RESUMO DA EXECUÇÃO - 20261007_190634            ║
 ╚════════════════════════════════════════════════════════════════╝
 
 📊 ESTATÍSTICAS GERADAS:
-  • Imagens reconstruídas: 18
-  • Figuras de análise: 72
-  • Checkpoints salvos: 18
-  • Pasta de backup: outputs_execucao_20261007_172255/
+  • Imagens reconstruídas: 270
+  • Figuras de análise: 1080
+  • Checkpoints salvos: 270
+  • Backup de outputs: outputs_execucao_20261007_190634/
+  • Backup de validation: validation_execucao_20261007_190634/
 
 📂 ARQUIVOS PRINCIPAIS:
   • Métricas: outputs/metrics/runs.csv
@@ -21,12 +22,13 @@
   • Ver figuras: outputs/figures/
   • Ver métricas: outputs/tables/summary.csv
 
-⏱️  TIMESTAMP: 20261007_172255
+⏱️  TIMESTAMP: 20261007_190634
 🖥️  Projeto raiz: C:\Projetos\projeto_2_redes_neurais
 
 Para comparar com execução anterior:
-  • Backup salvo em: C:\Projetos\projeto_2_redes_neurais/outputs_execucao_20261007_172255
-  • Compare com: outputs/
+  • Backup outputs: C:\Projetos\projeto_2_redes_neurais/outputs_execucao_20261007_190634
+  • Backup validation: C:\Projetos\projeto_2_redes_neurais/validation_execucao_20261007_190634
+  • Compare com: outputs/ e validation/
 
 Para reexecutar:
   python scripts/execute_and_report.py --full
