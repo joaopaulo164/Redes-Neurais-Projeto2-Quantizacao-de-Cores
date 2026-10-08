@@ -34,8 +34,10 @@ Isso abre um menu com as seguintes opções:
 - 5️⃣ Teste rápido
 - 6️⃣ Gerar relatório
 - 7️⃣ Validar cores
-- 8️⃣ Limpar outputs
+- 8️⃣ Fazer backup e limpar outputs/validation
 - 9️⃣ Pipeline completo
+- 🔟 Pipeline completo com backup
+- 1️⃣1️⃣ Exportar checkpoints
 
 ---
 
@@ -65,12 +67,22 @@ python scripts/automate.py report
 # Validar cores
 python scripts/automate.py validate
 
-# Limpar outputs
+# Fazer backup e limpar outputs/validation
 python scripts/automate.py clean
 
 # Pipeline completo (install → test → full → report)
 python scripts/automate.py pipeline
 ```
+
+`python scripts/automate.py clean` cria backups datados de `outputs/` e
+`validation/` antes de limpar ambas. Se o backup falhar, a limpeza não começa.
+Em contraste, `make clean` e a tarefa VS Code `Clean: Remove Outputs` limpam
+somente `outputs/` e não fazem backup. O modo `--clean-only` limpa
+`outputs/` e `validation/`, mas não cria backup; execute `--backup-only` antes
+se usar esse modo diretamente. O subcomando `automate.py pipeline` e o target
+`make pipeline` também são fluxos básicos e não incluem o backup protegido;
+use a opção 10 do menu ou execute `execute_and_report.py` com `--full` ou
+`--quick` para isso.
 
 ---
 

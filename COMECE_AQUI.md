@@ -64,7 +64,7 @@ Escolha a opção:
 - **5**: Teste rápido
 - **6**: Gerar relatório
 - **7**: Validar
-- **8**: Limpar outputs
+- **8**: Fazer backup e limpar `outputs/` e `validation/`
 - **9**: Pipeline simples
 - **10**: Pipeline com backup ⭐
 - **0**: Sair
@@ -173,9 +173,11 @@ python scripts/automate.py
 
 ### "Quero só limpeza + novo backup"
 ```bash
-python scripts/execute_and_report.py --backup-only
-python scripts/execute_and_report.py --clean-only
+python scripts/automate.py clean
 ```
+Esse comando só limpa depois que os backups das duas pastas forem concluídos.
+`--clean-only` não faz backup; se executado diretamente, rode `--backup-only`
+antes.
 
 ---
 

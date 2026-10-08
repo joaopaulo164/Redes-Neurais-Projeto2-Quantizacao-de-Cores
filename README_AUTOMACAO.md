@@ -57,6 +57,18 @@ COMECE_AQUI.md
 
 ## 🎯 Novo Fluxo Automático
 
+No menu interativo, a opção 8 (`python scripts/automate.py clean`) faz backup
+datado de `outputs/` e `validation/` antes de limpar as duas pastas. Se o
+backup falhar, a limpeza não é executada. `make clean` e a tarefa VS Code
+`Clean: Remove Outputs` são alternativas diretas que limpam somente `outputs/`
+e não fazem backup; `--clean-only` limpa também `validation/`, mas não faz
+backup.
+
+Os comandos `python scripts/automate.py pipeline` e `make pipeline` são
+pipelines básicos e não fazem backup nem limpeza inicial. Para executar com
+backup e limpeza protegida antes da matriz, escolha a opção 10 do menu ou use
+`python scripts/execute_and_report.py` com `--full` ou `--quick`.
+
 ```
 Backup → Limpeza → Experimentos → Validação → Relatório → Resumo
 ```

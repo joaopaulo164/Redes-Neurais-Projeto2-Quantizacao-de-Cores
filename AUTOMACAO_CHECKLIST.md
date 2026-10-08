@@ -93,9 +93,10 @@ Data: 7 de outubro de 2026
 - [x] Colorização com emojis
 
 ### 7. Menu Interativo (Atualizado)
+- [x] Opção 8 faz backup datado de `outputs/` e `validation/` antes de limpar ambas
 - [x] Opção 10 adicionada: "Pipeline com backup"
 - [x] Integração com `execute_and_report.py`
-- [x] Suporte a 10 opções principais
+- [x] Suporte às 11 opções numeradas
 
 ### 8. Documentação Completa
 - [x] AUTOMACAO.md (guia de 30+ seções)

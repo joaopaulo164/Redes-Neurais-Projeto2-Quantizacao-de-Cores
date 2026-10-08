@@ -19,12 +19,18 @@ python scripts/execute_and_report.py --quick
 make pipeline
 ```
 
+`make pipeline` e `python scripts/automate.py pipeline` são fluxos básicos:
+não fazem backup nem limpeza inicial. Para o fluxo protegido descrito aqui,
+use a opção 10 do menu ou execute `scripts/execute_and_report.py` com `--full`
+ou `--quick`.
+
 ---
 
 ## 📋 O que o novo fluxo faz
 
 1. **Backup com Timestamp** 
    - Cria pasta `outputs_execucao_{YYYYMMDD_HHMMSS}/`
+   - Cria pasta `validation_execucao_{YYYYMMDD_HHMMSS}/`
    - Preserva resultados anteriores para comparação
 
 2. **Limpeza Segura**
@@ -162,6 +168,9 @@ python scripts/execute_and_report.py --backup-only
 ```bash
 python scripts/execute_and_report.py --clean-only
 ```
+Esse modo limpa `outputs/` e `validation/`, mas não faz backup. Para limpeza
+protegida, use a opção 8 do menu ou `python scripts/automate.py clean`, que
+só inicia a limpeza após o backup das duas pastas.
 
 ### Usar config customizado
 ```bash
@@ -215,8 +224,8 @@ python scripts/execute_and_report.py --quick
 # Com Make
 make pipeline
 
-# Limpar e reexecutar
-python scripts/execute_and_report.py --clean-only && python scripts/execute_and_report.py --full
+# Executar novamente (faz backup e limpa antes da matriz)
+python scripts/execute_and_report.py --full
 ```
 
 ---

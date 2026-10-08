@@ -1,30 +1,43 @@
-import argparse,sys,yaml
+"""Run the configured experiment matrix."""
+
+import argparse
+import sys
 from pathlib import Path
+from typing import Any, Sequence
+
+import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0,str(ROOT))
-
-from src.data.images import list_images
-from src.experiments.runner import run, aggregate
+sys.path.insert(0, str(ROOT))
 
 
-def load_config(path):
+def load_config(path: str | Path) -> dict[str, Any]:
+    """Load and normalize experiment configuration paths."""
     config_path = Path(path)
     if not config_path.exists():
-        raise FileNotFoundError(f"Arquivo de configuração não encontrado: {config_path}")
+        raise FileNotFoundError(
+            f"Arquivo de configuração não encontrado: {config_path}"
+        )
 
-    with open(config_path, encoding='utf-8') as f:
-        config = yaml.safe_load(f) or {}
+    with open(config_path, encoding="utf-8") as config_file:
+        config = yaml.safe_load(config_file) or {}
 
-    config.setdefault('data_dir', 'data/raw')
-    config.setdefault('output_dir', 'outputs')
+    config.setdefault("data_dir", "data/raw")
+    config.setdefault("output_dir", "outputs")
 
-    for key in ['data_dir', 'output_dir']:
+    for key in ["data_dir", "output_dir"]:
         value = config[key]
         if not Path(value).is_absolute():
             config[key] = str(ROOT / value)
 
-    missing = [key for key in ['data_dir', 'output_dir', 'seeds', 'capacities', 'models'] if key not in config]
+    required_keys = [
+        "data_dir",
+        "output_dir",
+        "seeds",
+        "capacities",
+        "models",
+    ]
+    missing = [key for key in required_keys if key not in config]
     if missing:
         raise KeyError(
             f"Config inválido '{config_path}': faltam chaves obrigatórias: {missing}. "
@@ -34,19 +47,28 @@ def load_config(path):
     return config
 
 
-p = argparse.ArgumentParser()
-p.add_argument('--config', default='config/experiments.yaml')
-a = p.parse_args()
+def main(argv: Sequence[str] | None = None) -> None:
+    """Load experiment configuration and run every matrix combination."""
+    from src.data.images import list_images
+    from src.experiments.runner import aggregate, run
 
-c = load_config(a.config)
-images = list_images(c['data_dir'])
-print(f'{len(images)} imagens encontradas')
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", default="config/experiments.yaml")
+    arguments = parser.parse_args(argv)
 
-for im in images:
-    for m in c['models']:
-        for k in c['capacities']:
-            for s in c['seeds']:
-                print(im.name, m, k, s)
-                run(im, m, k, s, c)
+    config = load_config(arguments.config)
+    images = list_images(config["data_dir"])
+    print(f"{len(images)} imagens encontradas")
 
-aggregate(c['output_dir'])
+    for image_path in images:
+        for model_name in config["models"]:
+            for capacity in config["capacities"]:
+                for seed in config["seeds"]:
+                    print(image_path.name, model_name, capacity, seed)
+                    run(image_path, model_name, capacity, seed, config)
+
+    aggregate(config["output_dir"])
+
+
+if __name__ == "__main__":
+    main()

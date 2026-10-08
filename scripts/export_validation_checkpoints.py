@@ -2,11 +2,13 @@ import argparse
 import csv
 import json
 from pathlib import Path
+from typing import Any
 
 import torch
 
 
-def tensor_information(value):
+def tensor_information(value: Any) -> dict[str, Any] | None:
+    """Return shape, dtype, size, and numeric summary for a tensor."""
     if not isinstance(value, torch.Tensor):
         return None
 
@@ -32,7 +34,8 @@ def tensor_information(value):
     return information
 
 
-def load_checkpoint(path):
+def load_checkpoint(path: Path) -> Any:
+    """Load a checkpoint on CPU, supporting older PyTorch releases."""
     try:
         return torch.load(
             path,
@@ -46,7 +49,11 @@ def load_checkpoint(path):
         )
 
 
-def export_history(history, output_path):
+def export_history(
+    history: list[dict[str, Any]],
+    output_path: Path,
+) -> bool:
+    """Write checkpoint history records to CSV when history is available."""
     if not history:
         return False
 
@@ -75,7 +82,8 @@ def export_history(history, output_path):
     return True
 
 
-def export_edges(edges, output_path):
+def export_edges(edges: Any, output_path: Path) -> bool:
+    """Write graph edge endpoints and ages to CSV."""
     if not edges:
         return False
 
@@ -83,12 +91,12 @@ def export_edges(edges, output_path):
 
     if isinstance(edges, dict):
         for edge, age in edges.items():
-            node_a, node_b = edge
+            first_node, second_node = edge
 
             rows.append(
                 {
-                    "node_a": int(node_a),
-                    "node_b": int(node_b),
+                    "node_a": int(first_node),
+                    "node_b": int(second_node),
                     "age": int(age),
                 }
             )
@@ -96,19 +104,19 @@ def export_edges(edges, output_path):
     elif isinstance(edges, (list, tuple)):
         for edge in edges:
             if len(edge) == 2:
-                node_a, node_b = edge
+                first_node, second_node = edge
                 age = ""
 
             elif len(edge) >= 3:
-                node_a, node_b, age = edge[:3]
+                first_node, second_node, age = edge[:3]
 
             else:
                 continue
 
             rows.append(
                 {
-                    "node_a": int(node_a),
-                    "node_b": int(node_b),
+                    "node_a": int(first_node),
+                    "node_b": int(second_node),
                     "age": age,
                 }
             )
@@ -136,13 +144,15 @@ def export_edges(edges, output_path):
     return True
 
 
-def export_checkpoint(checkpoint_path, output_directory):
+def export_checkpoint(
+    checkpoint_path: Path,
+    output_directory: Path,
+) -> dict[str, Any]:
+    """Export one checkpoint into a summary and optional CSV artifacts."""
     state = load_checkpoint(checkpoint_path)
 
     if not isinstance(state, dict):
-        raise TypeError(
-            "O checkpoint não contém um dicionário."
-        )
+        raise TypeError("O checkpoint não contém um dicionário.")
 
     model = state.get(
         "model",
@@ -168,10 +178,7 @@ def export_checkpoint(checkpoint_path, output_directory):
         [],
     )
 
-    history_path = (
-        checkpoint_output
-        / "history.csv"
-    )
+    history_path = checkpoint_output / "history.csv"
 
     summary["history_exported"] = export_history(
         history,
@@ -193,25 +200,18 @@ def export_checkpoint(checkpoint_path, output_directory):
         weights = state.get("weights")
 
         if isinstance(weights, torch.Tensor):
-            summary["number_of_prototypes"] = (
-                int(weights.shape[0])
-            )
+            summary["number_of_prototypes"] = int(weights.shape[0])
 
     elif model == "gng":
         weights = state.get("weights")
         edges = state.get("edges", {})
 
         if isinstance(weights, torch.Tensor):
-            summary["number_of_nodes"] = int(
-                weights.shape[0]
-            )
+            summary["number_of_nodes"] = int(weights.shape[0])
 
         summary["number_of_edges"] = len(edges)
 
-        edges_path = (
-            checkpoint_output
-            / "edges.csv"
-        )
+        edges_path = checkpoint_output / "edges.csv"
 
         summary["edges_exported"] = export_edges(
             edges,
@@ -225,14 +225,9 @@ def export_checkpoint(checkpoint_path, output_directory):
             centroids,
             torch.Tensor,
         ):
-            summary["number_of_centroids"] = int(
-                centroids.shape[0]
-            )
+            summary["number_of_centroids"] = int(centroids.shape[0])
 
-    summary_path = (
-        checkpoint_output
-        / "summary.json"
-    )
+    summary_path = checkpoint_output / "summary.json"
 
     with summary_path.open(
         "w",
@@ -248,7 +243,8 @@ def export_checkpoint(checkpoint_path, output_directory):
     return summary
 
 
-def main():
+def main() -> None:
+    """Export all checkpoints from the configured input directory."""
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
@@ -263,30 +259,23 @@ def main():
 
     args = parser.parse_args()
 
-    checkpoints_directory = Path(
-        args.checkpoints
-    )
+    checkpoints_directory = Path(args.checkpoints)
 
-    output_directory = Path(
-        args.output
-    )
+    output_directory = Path(args.output)
 
     output_directory.mkdir(
         parents=True,
         exist_ok=True,
     )
 
-    checkpoint_paths = sorted(
-        checkpoints_directory.glob("*.pt")
-    )
+    checkpoint_paths = sorted(checkpoints_directory.glob("*.pt"))
 
     if not checkpoint_paths:
         raise FileNotFoundError(
-            "Nenhum arquivo .pt encontrado em "
-            f"{checkpoints_directory}"
+            f"Nenhum arquivo .pt encontrado em {checkpoints_directory}"
         )
 
-    index = []
+    index: list[dict[str, str]] = []
 
     for checkpoint_path in checkpoint_paths:
         print(
@@ -325,10 +314,7 @@ def main():
                 error,
             )
 
-    index_path = (
-        output_directory
-        / "checkpoint_index.csv"
-    )
+    index_path = output_directory / "checkpoint_index.csv"
 
     with index_path.open(
         "w",
@@ -354,10 +340,7 @@ def main():
         output_directory,
     )
 
-    successful = sum(
-        row["status"] == "success"
-        for row in index
-    )
+    successful = sum(row["status"] == "success" for row in index)
 
     print(
         "Checkpoints exportados:",

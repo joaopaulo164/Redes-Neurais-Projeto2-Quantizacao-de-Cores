@@ -223,7 +223,11 @@ outputs/logs/*
 
 
 outputs_execucao01/*
+!outputs_execucao01/.gitkeep
 validation_execucao01/*
+
+validation/*
+!validation/.gitkeep
 
 
 # ------------------------------------------------------------

@@ -41,9 +41,10 @@
    - ✅ Comandos Unix: `make help`, `make test`, `make full-matrix`, `make pipeline`, etc.
 
 ### 6. **Menu Interativo** (`scripts/automate.py`)
-   - ✅ 10 opções de menu amigável
+   - ✅ 11 opções numeradas de menu amigável
    - ✅ CLI com subcomandos
    - ✅ Integração com execute_and_report.py
+   - ✅ Opção 8 faz backup datado de `outputs/` e `validation/` antes de limpar ambas
 
 ### 7. **PowerShell Shortcuts** (`scripts/powershell-profile.ps1`)
    - ✅ Atalhos de função para Windows

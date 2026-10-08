@@ -19,8 +19,8 @@ Estrutura:
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 import pandas as pd
 
@@ -30,64 +30,54 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 class RelatorioGerador:
     """Gera relatório estruturado do projeto."""
 
-    def __init__(self, output_dir="outputs", report_dir="report"):
+    def __init__(
+        self,
+        output_dir: str | Path = "outputs",
+        report_dir: str | Path = "report",
+    ) -> None:
         self.output_dir = Path(output_dir)
         self.report_dir = Path(report_dir)
         self.report_dir.mkdir(parents=True, exist_ok=True)
         self.timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    def load_data(self):
+    def load_data(self) -> None:
         """Carrega dados de experimentos."""
         runs_csv = self.output_dir / "metrics" / "runs.csv"
         summary_csv = self.output_dir / "tables" / "summary.csv"
-        
+
         self.runs_df = None
         self.summary_df = None
-        
+
         if runs_csv.exists():
             self.runs_df = pd.read_csv(runs_csv)
-        
+
         if summary_csv.exists():
             self.summary_df = pd.read_csv(summary_csv)
 
-    def section_1_introducao(self):
+    def section_1_introducao(self) -> str:
         """Seção 1: Introdução."""
         return """
 # Projeto 2: Quantização de Cores com Redes Neurais
 
 ## 1. Introdução
-
-### 1.1 Contexto da Quantização de Cores
-A quantização de cores é uma técnica fundamental em processamento de imagens que reduz o número de 
 cores distintas em uma imagem, preservando ao máximo a qualidade visual. Esta tarefa é crítica em 
 aplicações como:
 - Compressão de imagens com restrições de paleta;
 - Conversão entre espaços de cores;
 - Visualização em dispositivos com capacidade limitada;
-- Síntese visual e processamento artístico.
-
-### 1.2 Problema Abordado
 Este projeto implementa e compara três algoritmos de quantização baseados em redes neurais:
 - **Self-Organizing Map (SOM)**: preserva topologia através de vizinhança ordenada;
 - **Growing Neural Gas (GNG)**: adapta dinamicamente o número de neurônios;
 - **k-means**: otimiza a partição através de centróides.
 
-Cada algoritmo oferece trade-offs distintos entre qualidade, topologia e custo computacional.
-
-### 1.3 Motivação
 As métricas tradicionais (erro de quantização, PSNR) nem sempre correspondem à percepção visual 
 humana. A comparação estruturada destes algoritmos fornece insights sobre:
 - Quando cada algoritmo se destaca;
 - Correlação entre métricas numéricas e qualidade visual;
 - Preservação de propriedades topológicas versus fidelidade;
-- Distribuição dos protótipos no espaço de cores RGB.
-
-### 1.4 Objetivo Geral
 Implementar, avaliar e comparar três quantizadores de cores baseados em redes neurais, 
 estabelecendo um protocolo experimental reprodutível com métricas quantitativas e qualitativas.
 
-### 1.5 Objetivos Específicos
-- ✓ Implementar SOM, GNG e k-means em PyTorch com suporte a GPU;
 - ✓ Definir protocolo experimental com sementes, capacidades e imagens de teste;
 - ✓ Calcular métricas: quantização, topográfica, perceptual (ΔE), eficiência temporal;
 - ✓ Gerar evidências visuais: imagens, mapas de erro, gráficos;
@@ -95,7 +85,7 @@ estabelecendo um protocolo experimental reprodutível com métricas quantitativa
 - ✓ Responder às questões propostas através de análise comparativa estruturada.
 """
 
-    def section_2_fundamentacao(self):
+    def section_2_fundamentacao(self) -> str:
         """Seção 2: Fundamentação teórica."""
         return """
 ## 2. Fundamentação Teórica
@@ -221,7 +211,7 @@ Valores baixos indicam que a ordem espacial é preservada.
 (Implementação simplificada no projeto)
 """
 
-    def section_3_metodologia(self):
+    def section_3_metodologia(self) -> str:
         """Seção 3: Metodologia."""
         return """
 ## 3. Metodologia
@@ -363,7 +353,7 @@ Agregação: média e desvio padrão entre sementes (outputs/tables/summary.csv)
 - Backup automático de resultados anteriores (timestamp)
 """
 
-    def section_4_validacao(self):
+    def section_4_validacao(self) -> str:
         """Seção 4: Validação das implementações."""
         validation_path = Path("validation/validation_unique_colors.csv")
         validation_text = """
@@ -375,12 +365,17 @@ Esta seção reúne as evidências de que cada algoritmo funciona corretamente e
         if validation_path.exists():
             try:
                 import pandas as pd
+
                 df = pd.read_csv(validation_path)
                 total = len(df)
-                valid = int(df['valid'].sum())
+                valid = int(df["valid"].sum())
                 invalid = total - valid
-                max_unique = int(df['unique_colors'].max()) if not df.empty else 0
-                min_unique = int(df['unique_colors'].min()) if not df.empty else 0
+                max_unique = (
+                    int(df["unique_colors"].max()) if not df.empty else 0
+                )
+                min_unique = (
+                    int(df["unique_colors"].min()) if not df.empty else 0
+                )
 
                 validation_text += f"""
 ### 4.1 Status de Validação por Regressão
@@ -395,7 +390,7 @@ A validação foi executada em `{validation_path}`. O conjunto contém {total} r
 | Mínimo de cores únicas | {min_unique} |
 
 ```markdown
-{df[['file_name','model','capacity','seed','unique_colors','valid']].head(10).to_markdown(index=False)}
+{df[["file_name", "model", "capacity", "seed", "unique_colors", "valid"]].head(10).to_markdown(index=False)}
 ```
 
 **Interpretação**: a maior parte das reconstruções respeita o limite de cores. Caso existam registros inválidos, estes devem ser revisados antes da interpretação final.
@@ -438,7 +433,7 @@ Arquivo esperado: `validation/validation_unique_colors.csv`.
 """
         return validation_text
 
-    def section_5_resultados_quantitativos(self):
+    def section_5_resultados_quantitativos(self) -> str:
         """Seção 5: Resultados quantitativos."""
         text = """
 ## 5. Resultados Quantitativos
@@ -447,17 +442,38 @@ A tabela a seguir agrega as métricas de desempenho por imagem, modelo e capacid
 """
 
         if self.summary_df is not None and len(self.summary_df) > 0:
-            metric_cols = [
-                c for c in self.summary_df.columns
-                if any(tag in c for tag in ['quantization_error', 'topographic_error', 'mean_delta_e', 'psnr', 'training_time_s', 'inference_time_s'])
+            metric_columns = [
+                column_name
+                for column_name in self.summary_df.columns
+                if any(
+                    metric_name in column_name
+                    for metric_name in [
+                        "quantization_error",
+                        "topographic_error",
+                        "mean_delta_e",
+                        "psnr",
+                        "training_time_s",
+                        "inference_time_s",
+                    ]
+                )
             ]
-            candidate_cols = ['image_name', 'model', 'capacity_requested'] + metric_cols[:10]
-            candidate_cols = [c for c in candidate_cols if c in self.summary_df.columns]
+            candidate_columns = [
+                "image_name",
+                "model",
+                "capacity_requested",
+            ] + metric_columns[:10]
+            candidate_cols = [
+                column_name
+                for column_name in candidate_columns
+                if column_name in self.summary_df.columns
+            ]
             if candidate_cols:
                 display_df = self.summary_df[candidate_cols].copy()
-                for c in display_df.columns:
-                    if display_df[c].dtype.kind in 'f':
-                        display_df[c] = display_df[c].round(4)
+                for column_name in display_df.columns:
+                    if display_df[column_name].dtype.kind in "f":
+                        display_df[column_name] = display_df[
+                            column_name
+                        ].round(4)
                 text += "\n\n" + display_df.to_markdown(index=False)
             else:
                 text += "\n\n*Tabela agregada disponível, mas sem colunas de métricas esperadas.*"
@@ -505,7 +521,7 @@ A tabela a seguir agrega as métricas de desempenho por imagem, modelo e capacid
 """
         return text
 
-    def section_6_resultados_qualitativos(self):
+    def section_6_resultados_qualitativos(self) -> str:
         """Seção 6: Resultados qualitativos."""
         return """
 ## 6. Resultados Qualitativos
@@ -541,7 +557,7 @@ Para a análise final considerar-se completa, o conjunto de imagens e gráficos 
 - tempo de treinamento e inferência.
 """
 
-    def section_7_discussao(self):
+    def section_7_discussao(self) -> str:
         """Seção 7: Discussão."""
         return """
 ## 7. Discussão
@@ -572,7 +588,7 @@ O protocolo experimental deve comparar algoritmos sob condições controladas: m
 - qual apresenta melhor custo-benefício.
 """
 
-    def section_8_limitacoes(self):
+    def section_8_limitacoes(self) -> str:
         """Seção 8: Limitações."""
         return """
 ## 8. Limitações
@@ -596,7 +612,7 @@ Imagens de resolução muito diferente podem produzir comportamento distinto, po
 A SOM, a GNG e o k-means têm diferentes formas de organização topológica. Portanto, comparar erro topológico entre eles exige cuidado e contextualização.
 """
 
-    def section_9_conclusao(self):
+    def section_9_conclusao(self) -> str:
         """Seção 9: Conclusão."""
         return """
 ## 9. Conclusão
@@ -613,7 +629,7 @@ A conclusão mais relevante do projeto não é identificar um vencedor absoluto,
 - estender o estudo para algoritmos mais recentes de quantização e clustering.
 """
 
-    def section_10_evidencias_minimas(self):
+    def section_10_evidencias_minimas(self) -> str:
         """Seção 10: Conjunto mínimo de evidências."""
         return """
 ## 10. Conjunto Mínimo de Evidências
@@ -640,9 +656,10 @@ Para que a análise final seja considerada completa, o trabalho deve apresentar,
 Este conjunto mínimo é o que garante que a conclusão esteja apoiada por evidência experimental, e não apenas por hipótese teórica.
 """
 
-    def section_apendices(self):
+    def section_apendices(self) -> str:
         """Apêndices."""
-        return """
+        return (
+            """
 ## 11. Apêndices
 
 ### 11.1 Hiperparâmetros Completos
@@ -740,26 +757,31 @@ python scripts/validate_unique_colors.py
 - **Repositório**: versionado em Git
 - **Geração do relatório**: `python scripts/generate_report.py`
 - **Versões**: consulte `requirements.txt`
-- **Data da geração**: """ + self.timestamp + """
+- **Data da geração**: """
+            + self.timestamp
+            + """
 """
+        )
 
-    def generate(self):
+    def generate(self) -> Path:
         """Gera o relatório completo."""
         self.load_data()
 
-        report_content = "".join([
-            self.section_1_introducao(),
-            self.section_2_fundamentacao(),
-            self.section_3_metodologia(),
-            self.section_4_validacao(),
-            self.section_5_resultados_quantitativos(),
-            self.section_6_resultados_qualitativos(),
-            self.section_7_discussao(),
-            self.section_8_limitacoes(),
-            self.section_9_conclusao(),
-            self.section_10_evidencias_minimas(),
-            self.section_apendices(),
-        ])
+        report_content = "".join(
+            [
+                self.section_1_introducao(),
+                self.section_2_fundamentacao(),
+                self.section_3_metodologia(),
+                self.section_4_validacao(),
+                self.section_5_resultados_quantitativos(),
+                self.section_6_resultados_qualitativos(),
+                self.section_7_discussao(),
+                self.section_8_limitacoes(),
+                self.section_9_conclusao(),
+                self.section_10_evidencias_minimas(),
+                self.section_apendices(),
+            ]
+        )
 
         # Salvar
         output_file = self.report_dir / "relatorio_final.md"
@@ -771,9 +793,9 @@ python scripts/validate_unique_colors.py
         return output_file
 
 
-def main():
-    gerador = RelatorioGerador()
-    gerador.generate()
+def main() -> None:
+    report_generator = RelatorioGerador()
+    report_generator.generate()
 
 
 if __name__ == "__main__":

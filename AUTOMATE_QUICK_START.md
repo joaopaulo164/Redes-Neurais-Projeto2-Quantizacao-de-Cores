@@ -79,9 +79,17 @@ python scripts/automate.py pipeline # Tudo automaticamente!
 | `python scripts/automate.py full` | 45 min | Matriz completa |
 | `python scripts/automate.py report` | 1 min | Gera relatório |
 | `python scripts/automate.py validate` | 2 min | Valida cores |
-| `python scripts/automate.py clean` | 1 min | Remove outputs |
+| `python scripts/automate.py clean` | 1 min | Faz backup e limpa `outputs/` e `validation/` |
 | `python scripts/automate.py pipeline` | 60 min | Tudo em sequência |
 | `python scripts/automate.py interactive` | ✨ | Menu interativo |
+
+`make clean`, a tarefa VS Code `Clean: Remove Outputs` e o atalho PowerShell
+`clean-outputs` limpam apenas `outputs/`, sem backup. `make pipeline` e
+`python scripts/automate.py pipeline` também não executam backup/limpeza.
+O modo
+`python scripts/execute_and_report.py --clean-only` limpa `outputs/` e
+`validation/`, também sem backup. Para a limpeza protegida, use
+`python scripts/automate.py clean` ou a opção 8 do menu.
 
 ---
 

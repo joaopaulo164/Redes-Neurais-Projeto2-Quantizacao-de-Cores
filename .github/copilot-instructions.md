@@ -1,7 +1,7 @@
-# Copilot Instructions: Neural Networks Color Quantization
+# Copilot Instructions: Neural Color Quantization
 
 ## Project Overview
-**Projeto 2** implements three neural network-based color quantizers (SOM, GNG, k-means) for image color reduction in PyTorch. The codebase runs reproducible experiments via YAML config, producing quantized images, error metrics, visualizations, and aggregated CSV reports. All commands run from project root; fixtures use tensors and numpy arrays normalized to [0,1].
+**Projeto 2** implements three PyTorch color quantizers (SOM, GNG, and k-means). YAML configurations drive reproducible experiments that produce reconstructed images, metrics, plots, checkpoints, and aggregated CSV reports. Run commands from the project root. Image tensors use RGB values normalized to [0, 1].
 
 ## Core Architecture
 
@@ -11,7 +11,7 @@
 3. **Evaluate** - Metrics (quantization error, MAE/MSE/RMSE/PSNR, Delta E CIEDE2000) + topology analysis
 
 ### Key Classes in `src/models/quantizers.py`
-- **Base** - Abstract interface: `.quantize()`, `.predict_bmu()`, `.prototypes()`, `.save(path)`, `.state_dict()`
+- **Base** - Shared implementation of `.quantize()` and `.save(path)`; concrete quantizers provide `.predict_bmu()`, `.prototypes()`, and `.state_dict()`.
 - **SOM** - Self-Organizing Map: rows/cols grid, neighborhood decay via sigma, weights shape `(rows*cols, 3)`
 - **GNG** - Growing Neural Gas: dynamic node insertion, edge aging, error tracking; max nodes capped at capacity
 - **TorchKMeans** - k-means++: centroid initialization, early stopping via tolerance threshold
@@ -22,9 +22,9 @@ data/raw/{image}.png
   → load_image() [PIL → [0,1] RGB tensor]
   → sample_pixels(x, max_train_pixels, seed)  [reproducible per seed]
   → model.fit(train_subset)
-  → model.quantize(full_image)
+  → model.quantize(full_image, inference_batch_size)
   → save_image() → outputs/reconstructed/
-  → evaluate() + make_plots() → outputs/
+  → evaluate() + make_plots() → outputs/figures/
 ```
 
 ## Configuration & Experiments
@@ -34,6 +34,15 @@ data/raw/{image}.png
   - SOM: `epochs`, `lr0`/`lrf` (learning rate decay), `sigma_final` (neighborhood decay)
   - GNG: `steps`, `eps_b`/`eps_n` (weights/neighbors learning), `insertion_interval`, `max_edge_age`
   - k-means: `max_iter`, `tolerance`
+
+## Python Development Standards
+- Keep one statement per line; do not use semicolons to combine statements.
+- Use descriptive names, type hints on functions and methods, and Google-style docstrings for public APIs.
+- Preserve seeded random-generator use and output schemas when changing experiment behavior.
+- Format Python files with `python -m ruff format --line-length 79 .`.
+- Check imports and core lint with `python -m ruff check --select E4,E7,E9,F,I --ignore E402 .`; `E402` is ignored for entry points that deliberately bootstrap `sys.path`.
+- Run tests with `python -m pytest -q`.
+- Formatting and lint tools (`autopep8`, `black`, and `ruff`) are included in `requirements.txt`; use Ruff for the project's formatter and lint checks.
 
 ## Developer Workflows
 
@@ -62,10 +71,13 @@ python scripts/validate_unique_colors.py  # Color validation per experiment
 ```
 
 ## Project Automation & Backup Discipline
-- **Execution backup pattern**: `outputs_execucao_YYYYMMDD_HHMMSS/` and `validation_execucao_YYYYMMDD_HHMMSS/` are created before each pipeline run
-- **Cleanup policy**: both `outputs/` and `validation/` are reset before running experiments so each execution starts from a clean state
-- **Safety rule**: backup folders are never deleted by the cleanup step; they are preserved for comparison and auditing
-- **Git ignore policy**: use wildcard patterns such as `outputs_execucao_*/` and `validation_execucao_*/` to keep timestamped backups out of version control
+- `scripts/execute_and_report.py --full` and `--quick` back up `outputs/` and `validation/`, clean generated data, then run the selected workflow. The pipeline must stop before cleanup if backup fails, and before experiments if cleanup fails.
+- Interactive option 8 and `python scripts/automate.py clean` run `--backup-only` first, then `--clean-only`; cleanup is skipped if backup fails.
+- Interactive option 10 runs the complete backup, clean, experiment, validation, report, and summary pipeline.
+- `--clean-only`, `make clean`, the PowerShell `clean-outputs` helper, and the VS Code task `Clean: Remove Outputs` are direct cleanup paths and do not create backups. `make clean`, `clean-outputs`, and the VS Code task clear only `outputs/`; `--clean-only` clears `outputs/` and `validation/`.
+- `python scripts/automate.py pipeline` and `make pipeline` are basic pipelines without the timestamped backup-and-clean stage. Use interactive option 10 or `scripts/execute_and_report.py` with `--full` or `--quick` for that protected workflow.
+- Backups use `outputs_execucao_YYYYMMDD_HHMMSS/` and `validation_execucao_YYYYMMDD_HHMMSS/`. Cleanup must never remove these backup directories.
+- Keep timestamped backups out of version control with patterns such as `outputs_execucao_*/` and `validation_execucao_*/`.
 
 ## Automation Options
 
@@ -75,7 +87,7 @@ python scripts/automate.py
 # or
 python scripts/automate.py interactive
 ```
-User-friendly menu with options to install dependencies, run tests, execute a demo, run the full matrix, generate reports, validate unique colors, clean generated outputs, and run the full backup→clean→run→report pipeline.
+The menu includes install, test, demo, full and quick matrices, report generation, color validation, backup-and-clean (option 8), a basic pipeline, the full backup pipeline (option 10), and checkpoint export.
 
 ### 2. Command-Line Interface
 ```bash
@@ -86,7 +98,7 @@ python scripts/automate.py full         # Full matrix
 python scripts/automate.py quick        # Quick test (reduced matrix)
 python scripts/automate.py report       # Generate report
 python scripts/automate.py validate     # Validate colors
-python scripts/automate.py clean        # Clean outputs
+python scripts/automate.py clean        # Back up, then clean outputs and validation
 python scripts/automate.py pipeline     # Full pipeline (install→test→run→report)
 ```
 
@@ -97,7 +109,7 @@ python scripts/execute_and_report.py --full
 python scripts/execute_and_report.py --backup-only
 python scripts/execute_and_report.py --clean-only
 ```
-This script creates timestamped backups for both `outputs/` and `validation/`, then removes old generated content before rerunning the experiments and report generation.
+The full and quick modes create timestamped backups for both `outputs/` and `validation/`, then remove old generated content before running experiments and generating the report. `--backup-only` and `--clean-only` can also be run separately; the latter does not make a backup.
 
 ### 4. Make Commands (Unix/Linux/Git Bash)
 ```bash
@@ -144,6 +156,7 @@ outputs/
 
 validation/
   validation_unique_colors.csv  ← Unique-color validation summary
+  checkpoint audit exports     ← CSV/TXT/JSON files when exported
 
 backup folders (timestamped):
   outputs_execucao_YYYYMMDD_HHMMSS/

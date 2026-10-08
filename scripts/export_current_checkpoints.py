@@ -15,17 +15,15 @@ Uso:
   python scripts/export_current_checkpoints.py --strict --overwrite
 """
 
-import sys
 import argparse
 import logging
-from pathlib import Path
+import sys
 from datetime import datetime
+from pathlib import Path
 
 # Adiciona src/ ao path para importar módulos
 project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root / 'src'))
-
-from validation.checkpoint_exporter import CheckpointExporter
+sys.path.insert(0, str(project_root / "src"))
 
 
 def setup_logging(verbose: bool = False) -> logging.Logger:
@@ -33,18 +31,20 @@ def setup_logging(verbose: bool = False) -> logging.Logger:
     level = logging.DEBUG if verbose else logging.INFO
     logging.basicConfig(
         level=level,
-        format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S',
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
     )
     return logging.getLogger(__name__)
 
 
-def main():
+def main() -> int:
     """Ponto de entrada principal."""
+    from validation.checkpoint_exporter import CheckpointExporter
+
     parser = argparse.ArgumentParser(
-        description='Exporta checkpoints .pt para formatos auditáveis (TXT, CSV, JSON)',
+        description="Exporta checkpoints .pt para formatos auditáveis (TXT, CSV, JSON)",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog='''
+        epilog="""
 Exemplos:
   python scripts/export_current_checkpoints.py
       → Exporta outputs/checkpoints/ para validation/
@@ -70,80 +70,81 @@ Exemplos:
       --trusted-checkpoints \\
       --overwrite
       → Confia em checkpoints (map_location=None) e sobrescreve arquivos existentes
-        ''',
+        """,
     )
 
     parser.add_argument(
-        '--input-dir',
+        "--input-dir",
         type=Path,
         default=None,
-        help='Diretório com checkpoints .pt (default: outputs/checkpoints/)',
+        help="Diretório com checkpoints .pt (default: outputs/checkpoints/)",
     )
 
     parser.add_argument(
-        '--output-dir',
+        "--output-dir",
         type=Path,
         default=None,
-        help='Diretório para arquivos exportados (default: validation/)',
+        help="Diretório para arquivos exportados (default: validation/)",
     )
 
     parser.add_argument(
-        '--runs-csv',
+        "--runs-csv",
         type=Path,
         default=None,
-        help='Caminho para runs.csv (default: outputs/metrics/runs.csv)',
+        help="Caminho para runs.csv (default: outputs/metrics/runs.csv)",
     )
 
     parser.add_argument(
-        '--history-stride',
+        "--history-stride",
         type=int,
         default=1,
-        help='Amostragem de histórico: 1=todos, 2=metade, etc. (default: 1)',
+        help="Amostragem de histórico: 1=todos, 2=metade, etc. (default: 1)",
     )
 
     parser.add_argument(
-        '--history-mode',
-        choices=['full', 'summary', 'none'],
-        default='full',
-        help='Modo de exportação do histórico: full|summary|none (default: full)',
+        "--history-mode",
+        choices=["full", "summary", "none"],
+        default="full",
+        help="Modo de exportação do histórico: full|summary|none (default: full)",
     )
 
     parser.add_argument(
-        '--prototype-max-rows',
+        "--prototype-max-rows",
         type=int,
         default=100,
-        help='Máximo de protótipos/centróides a exportar por checkpoint (default: 100)',
+        help="Máximo de protótipos/centróides a exportar por checkpoint (default: 100)",
     )
 
     parser.add_argument(
-        '--trusted-checkpoints',
-        action='store_true',
-        help='Carrega checkpoints sem map_location=cpu (menos seguro)',
+        "--trusted-checkpoints",
+        action="store_true",
+        help="Carrega checkpoints sem map_location=cpu (menos seguro)",
     )
 
     parser.add_argument(
-        '--strict',
-        action='store_true',
-        help='Modo strict: falha em erros, não continua',
+        "--strict",
+        action="store_true",
+        help="Modo strict: falha em erros, não continua",
     )
 
     parser.add_argument(
-        '--overwrite',
-        action='store_true',
-        help='Sobrescreve arquivos existentes',
+        "--overwrite",
+        action="store_true",
+        help="Sobrescreve arquivos existentes",
     )
 
     parser.add_argument(
-        '--format',
-        choices=['all', 'csv-only', 'json-only', 'txt-only'],
-        default='all',
-        help='Quais formatos exportar (default: all)',
+        "--format",
+        choices=["all", "csv-only", "json-only", "txt-only"],
+        default="all",
+        help="Quais formatos exportar (default: all)",
     )
 
     parser.add_argument(
-        '-v', '--verbose',
-        action='store_true',
-        help='Logging verboso (DEBUG)',
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Logging verboso (DEBUG)",
     )
 
     args = parser.parse_args()
@@ -152,14 +153,18 @@ Exemplos:
     logger = setup_logging(verbose=args.verbose)
 
     # Resolve paths com defaults
-    input_dir = args.input_dir or (project_root / 'outputs' / 'checkpoints')
-    output_dir = args.output_dir or (project_root / 'validation')
-    runs_csv = args.runs_csv or (project_root / 'outputs' / 'metrics' / 'runs.csv')
+    input_dir = args.input_dir or (project_root / "outputs" / "checkpoints")
+    output_dir = args.output_dir or (project_root / "validation")
+    runs_csv = args.runs_csv or (
+        project_root / "outputs" / "metrics" / "runs.csv"
+    )
 
     logger.info("=== Exportador de Checkpoints ===")
     logger.info(f"Input:  {input_dir}")
     logger.info(f"Output: {output_dir}")
-    logger.info(f"Runs CSV: {runs_csv if runs_csv.exists() else '(não encontrado)'}")
+    logger.info(
+        f"Runs CSV: {runs_csv if runs_csv.exists() else '(não encontrado)'}"
+    )
     logger.info(f"History Stride: {args.history_stride}")
     logger.info(f"History Mode: {args.history_mode}")
     logger.info(f"Prototype Max Rows: {args.prototype_max_rows}")
@@ -173,7 +178,7 @@ Exemplos:
         return 1
 
     # Verificar se há checkpoints
-    checkpoint_files = list(input_dir.glob('*.pt'))
+    checkpoint_files = list(input_dir.glob("*.pt"))
     if not checkpoint_files:
         logger.warning(f"Nenhum checkpoint encontrado em {input_dir}")
         return 0
@@ -182,7 +187,7 @@ Exemplos:
 
     # Verificar se output_dir precisa ser limpo
     if output_dir.exists() and not args.overwrite:
-        existing_exports = list(output_dir.glob('checkpoints_atuais_*'))
+        existing_exports = list(output_dir.glob("checkpoints_atuais_*"))
         if existing_exports and not args.overwrite:
             logger.warning(
                 f"Arquivos de exportação já existem em {output_dir}. "
@@ -205,7 +210,12 @@ Exemplos:
 
     try:
         # Determinar se consolida based on format
-        consolidate = args.format in ('all', 'csv-only', 'txt-only', 'json-only')
+        consolidate = args.format in (
+            "all",
+            "csv-only",
+            "txt-only",
+            "json-only",
+        )
 
         output_files = exporter.export_all(
             history_stride=args.history_stride,
@@ -215,25 +225,33 @@ Exemplos:
         )
 
         # Filtrar por formato se necessário
-        if args.format != 'all':
-            if args.format == 'csv-only':
+        if args.format != "all":
+            if args.format == "csv-only":
                 output_files = {
-                    k: v for k, v in output_files.items() if 'csv' in k
+                    format_name: output_path
+                    for format_name, output_path in output_files.items()
+                    if "csv" in format_name
                 }
-            elif args.format == 'json-only':
+            elif args.format == "json-only":
                 output_files = {
-                    k: v for k, v in output_files.items() if 'json' in k
+                    format_name: output_path
+                    for format_name, output_path in output_files.items()
+                    if "json" in format_name
                 }
-            elif args.format == 'txt-only':
+            elif args.format == "txt-only":
                 output_files = {
-                    k: v for k, v in output_files.items() if 'txt' in k
+                    format_name: output_path
+                    for format_name, output_path in output_files.items()
+                    if "txt" in format_name
                 }
 
         elapsed = datetime.now() - start_time
 
         logger.info("")
         logger.info("=== Resultado ===")
-        logger.info(f"Checkpoints Exportados: {len(exporter.exported_checkpoints)}")
+        logger.info(
+            f"Checkpoints Exportados: {len(exporter.exported_checkpoints)}"
+        )
         logger.info(f"Tempo Total: {elapsed.total_seconds():.2f}s")
         logger.info("")
 
@@ -250,10 +268,10 @@ Exemplos:
         logger.info("✓ Exportação concluída com sucesso")
         return 0
 
-    except Exception as e:
-        logger.exception(f"Erro durante exportação: {e}")
+    except Exception as error:
+        logger.exception(f"Erro durante exportação: {error}")
         return 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())
